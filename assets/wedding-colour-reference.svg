@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1080" role="img" aria-labelledby="title description">
+<title id="title">Wedding colour inspiration</title><desc id="description">Sage green, ivory, champagne and soft gold</desc>
+<rect width="900" height="1080" fill="#fbfaf6"/>
+<rect x="24" y="24" width="852" height="1032" rx="25" fill="none" stroke="#e3ddce" stroke-width="2"/>
+<text x="450" y="130" font-family="Georgia,serif" font-size="23" letter-spacing="8" text-anchor="middle" fill="#34362e">THE WEDDING OF</text>
+<text x="450" y="202" font-family="Georgia,serif" font-size="59" text-anchor="middle" fill="#2c3029">Deborah &amp; Caleb</text>
+<text x="450" y="265" font-family="Georgia,serif" font-size="25" letter-spacing="5" text-anchor="middle" fill="#697761">COLOURS OF OUR DAY</text>
+<line x1="110" y1="298" x2="790" y2="298" stroke="#d9d2c5" stroke-width="1"/>
+<rect x="74" y="352" width="169" height="450" fill="#a0a993"/>
+<rect x="267" y="352" width="169" height="450" fill="#f7f4eb" stroke="#d4d0c7"/>
+<rect x="460" y="352" width="169" height="450" fill="#e8ceb0"/>
+<rect x="653" y="352" width="169" height="450" fill="#cbaa72"/>
+<g font-family="Georgia,serif" font-size="20" fill="#32352d" text-anchor="middle" letter-spacing="1">
+<text x="158" y="850">SAGE GREEN</text><text x="352" y="850">IVORY</text><text x="545" y="850">CHAMPAGNE</text><text x="738" y="850">SOFT GOLD</text>
+</g>
+<text x="450" y="960" font-family="Georgia,serif" font-size="28" font-style="italic" text-anchor="middle" fill="#727b65">Natural · Romantic · Everlasting</text>
+<text x="450" y="1007" font-family="Georgia,serif" font-size="21" letter-spacing="2" text-anchor="middle" fill="#555c4d">01 JANUARY 2027</text>
+</svg>
