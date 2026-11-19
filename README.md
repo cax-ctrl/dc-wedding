@@ -1,18 +1,19 @@
-# Deborah & Caleb — Wedding invitation
+# Deborah & Caleb — Wedding Website
 
-Public **preview** for the wedding on Friday, 1 January 2027 at The Conservatory Garden, Lekki Phase One, Lagos, Nigeria.
+Website for the white wedding of Deborah and Caleb, Friday 1 January 2027.
 
-Visit: https://cax-ctrl.github.io/dc-wedding/ (after GitHub Pages is enabled under Settings → Pages → Deploy from a branch → main → /(root)).
+This redesign takes structural inspiration from Rainier-PS's full-screen invitation demo, while using original layout, writing, styling, typography hierarchy and custom wedding palette. The original reference uses a full-viewport scroll-snap layout; this site preserves that simplicity with an ivory/sage/soft-gold visual system.
 
-## Features
-- Responsive editorial invitation, temporary Unsplash images and photo story
-- Ceremony details, eight-part order of celebration and calendar file
-- Suggested wedding colours and gift placeholders
-- Invitation-only RSVP interface, **not accepting submissions** on public GitHub Pages preview
+- **Preview**: `https://cax-ctrl.github.io/dc-wedding/`
+- **Venue**: The Conservatory Garden, 18 Wole Olateju Crescent, off Admiralty Way, Lekki Phase One, Lagos.
+- **Schedule**: Venue opens noon, guests seated from 12:30 pm, service 1 pm and reception at the same venue.
+- **Guest list**: Invitation only; no additional guests, including children, unless named.
+- **RSVP deadline**: 20 December 2026.
 
-## RSVP and guest privacy
-This public static website does **not** collect or store RSVP information. Connect and secure the separately hosted RSVP API before activating the form through `rsvp-config.js`. Do **not** commit a guest list, invitation codes, private contact numbers, bank details, credentials or the RSVP database to this repository.
+## Technical notes
 
-Google Sheets, SMS, payment methods and private RSVP backend are **not connected**.
-
-No guests can submit responses through GitHub Pages until secure hosting and the approved guest list are configured.
+- GitHub Pages only hosts the static website. It **does not receive or save RSVPs**.
+- Public `/rsvp-config.js` intentionally leaves `WEDDING_RSVP_API_BASE_URL` blank. Only configure once you deploy and secure the separate RSVP API and approved guest database. Never commit guest data, payment credentials, API secrets or invitation-code lists.
+- Photography references are temporary Unsplash images already used in the previous design, to be replaced with the couple's own photos. The story is intentionally a placeholder; no personal history has been invented.
+- Wedding gift/payment links will remain inactive until supplied and verified.
+- The layout uses 100svh panels with CSS scroll snapping, with overflow fallback for small heights and reduced-motion settings.
