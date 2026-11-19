@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Deborah and Caleb//Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:deborah-caleb-wedding-20270101@wedding.local
+DTSTAMP:20261120T000000Z
+DTSTART:20270101T120000Z
+DTEND:20270101T183000Z
+SUMMARY:Deborah & Caleb — Wedding Celebration
+DESCRIPTION:Venue opens at 12:00 noon. Guest seating from 12:30 PM. Wedding ceremony at 1:00 PM. Reception at the same venue. Celebration concludes at 7:30 PM (WAT).
+LOCATION:The Conservatory Garden\, 18 Wole Olateju Crescent\, Off Admiralty Way\, Lekki Phase One\, Lagos\, Nigeria
+END:VEVENT
+END:VCALENDAR
