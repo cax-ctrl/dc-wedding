@@ -113,7 +113,7 @@ if (invitationCode && rsvpAPIBase) {
   if(!stage || !pages || !open) return;
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const inviteFromLink = new URLSearchParams(window.location.search).has('invite');
-  if (inviteFromLink && window.WEDDING_RSVP_API_BASE_URL) { stage.hidden = true; return; }
+  if (inviteFromLink && window.WEDDING_RSVP_API_BASE_URL) return;
   stage.hidden=false;
   pages.inert=true;
   if (skipLink) skipLink.inert=true;
@@ -134,15 +134,16 @@ if (invitationCode && rsvpAPIBase) {
   function play(){
     if(running || finished) return;
     running=true;
-    stage.classList.add('is-opening');
+    stage.classList.add('is-unsealing');
     if(reduceMotion){
-      stage.classList.add('is-opened','is-revealing');
+      stage.classList.add('is-opening','is-opened','is-revealing');
       finish();
       return;
     }
-    after(1050,()=>stage.classList.add('is-opened'));
-    after(1300,()=>stage.classList.add('is-revealing'));
-    after(1800,finish);
+    after(180,()=>stage.classList.add('is-opening'));
+    after(1320,()=>stage.classList.add('is-opened'));
+    after(1520,()=>stage.classList.add('is-revealing'));
+    after(2080,finish);
   }
   open.addEventListener('click',play);
 })();
