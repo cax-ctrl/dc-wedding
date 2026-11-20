@@ -103,45 +103,46 @@ if (invitationCode && rsvpAPIBase) {
 }
 
 
-// Self-contained first-screen envelope: we do not alter the page-by-page scroller.
+
+// Self-contained first-screen envelope: full-screen and direct to the homepage.
 (function setupEnvelope(){
   const stage=document.getElementById('opening-stage');
   const pages=document.getElementById('pages');
   const open=document.getElementById('open-seal');
-  const enter=document.getElementById('enter-wedding');
-  const skip=document.getElementById('skip-opening');
-  if(!stage || !pages || !open || !enter || !skip) return;
+  const skipLink=document.querySelector('.skip-link');
+  if(!stage || !pages || !open) return;
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const inviteFromLink = new URLSearchParams(window.location.search).has('invite');
-  // Direct private RSVP links go to their named RSVP view immediately.
-  if (inviteFromLink && window.WEDDING_RSVP_API_BASE_URL) return;
+  if (inviteFromLink && window.WEDDING_RSVP_API_BASE_URL) { stage.hidden = true; return; }
   stage.hidden=false;
   pages.inert=true;
-  document.querySelector('.skip-link').inert=true;
+  if (skipLink) skipLink.inert=true;
   open.focus({preventScroll:true});
   let running=false;
+  let finished=false;
   const timers=[];
   const after=(ms,fn)=>timers.push(window.setTimeout(fn,ms));
-  function play(){
-    if(running)return;
-    running=true;
-    stage.classList.add('is-open');
-    if(reduceMotion){stage.classList.add('is-rising','is-showing','is-unfolded');enter.focus();return;}
-    after(650,()=>stage.classList.add('is-rising'));
-    after(1600,()=>stage.classList.add('is-showing'));
-    after(2350,()=>{stage.classList.add('is-unfolded');enter.focus({preventScroll:true});});
-  }
-  function leave(){
-    timers.forEach(clearTimeout);
-    if(stage.hidden)return;
+  function finish(){
+    if(finished) return;
+    finished=true;
     pages.inert=false;
-    document.querySelector('.skip-link').inert=false;
-    stage.classList.add('is-exiting');
-    const finish=()=>{stage.hidden=true;stage.className='opening-stage';document.getElementById('home').scrollIntoView({block:'start',behavior:'instant'});};
-    if(reduceMotion)finish();else window.setTimeout(finish,510);
+    if (skipLink) skipLink.inert=false;
+    stage.hidden=true;
+    stage.className='opening-stage';
+    document.getElementById('home').scrollIntoView({block:'start',behavior:'instant'});
+  }
+  function play(){
+    if(running || finished) return;
+    running=true;
+    stage.classList.add('is-opening');
+    if(reduceMotion){
+      stage.classList.add('is-opened','is-revealing');
+      finish();
+      return;
+    }
+    after(1050,()=>stage.classList.add('is-opened'));
+    after(1300,()=>stage.classList.add('is-revealing'));
+    after(1800,finish);
   }
   open.addEventListener('click',play);
-  enter.addEventListener('click',leave);
-  skip.addEventListener('click',leave);
-  stage.addEventListener('keydown',e=>{if(e.key==='Escape')leave();});
 })();

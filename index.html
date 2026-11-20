@@ -19,38 +19,61 @@
 <body>
 <a href="#invitation" class="skip-link">Skip invitation cover</a>
 
-  <!-- First-visit invitation: a self-contained overlay. It does not change page snapping. -->
-  <div class="opening-stage" id="opening-stage" role="dialog" aria-modal="true" aria-labelledby="opening-title" hidden>
-    <div class="opening-wash" aria-hidden="true"></div>
-    <div class="envelope" id="envelope" aria-hidden="false">
-      <div class="envelope-back"></div>
-      <div class="envelope-letter">
-        <div class="letter-face">
-          <p class="letter-small">The wedding of</p>
-          <p class="letter-names">Deborah &amp; Caleb</p>
-          <p class="letter-date">1 January 2027</p>
-        </div>
-      </div>
-      <div class="envelope-front"></div>
-      <div class="envelope-flap"><i class="flap-outer"></i><i class="flap-inner"></i></div>
+  <!-- Full-viewport envelope: the wax seal is the only invitation-opening action. -->
+  <div class="opening-stage" id="opening-stage" role="dialog" aria-modal="true" aria-label="Sealed wedding invitation">
+    <div class="opening-envelope" aria-hidden="true">
+      <div class="opening-flap flap-left"></div>
+      <div class="opening-flap flap-right"></div>
+      <div class="opening-flap flap-bottom"></div>
+      <div class="opening-flap flap-top"></div>
+      <svg class="opening-seams" viewBox="0 0 1000 1600" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M 0 0 L 500 800 L 1000 0 M 0 1600 L 500 800 L 1000 1600" />
+        <path d="M 0 0 L 500 800 L 0 1600 M 1000 0 L 500 800 L 1000 1600" class="seams-highlight" />
+      </svg>
+      <svg class="opening-emboss" viewBox="0 0 1000 1600" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <g id="flower" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M0 -29 C-14 -43 -27 -19 -13 -7 C-36 -16 -41 9 -16 11 C-31 30 -6 38 4 17 C16 38 39 21 19 6 C42 -4 29 -29 9 -14 C13 -38 -4 -43 0 -29Z"/>
+            <circle cx="1" cy="1" r="8"/>
+            <path d="M-3 -3l7 8M4 -5l-6 10"/>
+          </g>
+          <g id="branch" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M0 0 C-35 -14 -90 -50 -172 -45"/>
+            <path d="M-34 -12 C-52 -42 -69 -53 -81 -49 C-73 -25 -56 -13 -34 -12Z"/>
+            <path d="M-66 -28 C-75 -3 -102 -1 -110 -14 C-97 -35 -80 -39 -66 -28Z"/>
+            <path d="M-115 -41 C-135 -66 -151 -64 -156 -60 C-144 -41 -130 -34 -115 -41Z"/>
+            <path d="M-145 -45 C-155 -24 -176 -15 -192 -21 C-178 -41 -162 -49 -145 -45Z"/>
+          </g>
+        </defs>
+        <g class="emboss-shadow" stroke="#d5bfa9" stroke-width="4.5" opacity=".55">
+          <g transform="translate(500 215)">
+            <use href="#branch"/>
+            <use href="#branch" transform="scale(-1 1)"/>
+            <use href="#branch" transform="rotate(-15) scale(1.25 1.2)"/>
+            <use href="#branch" transform="rotate(15) scale(-1.25 1.2)"/>
+            <use href="#flower" transform="translate(0 -10) scale(1.65)"/>
+            <use href="#flower" transform="translate(-135 -17) scale(.9)"/>
+            <use href="#flower" transform="translate(135 -17) scale(.9)"/>
+            <use href="#flower" transform="translate(-220 -35) scale(.6)"/>
+            <use href="#flower" transform="translate(220 -35) scale(.6)"/>
+          </g>
+          <g transform="translate(500 1403) scale(1 -1)">
+            <use href="#branch"/>
+            <use href="#branch" transform="scale(-1 1)"/>
+            <use href="#branch" transform="rotate(-15) scale(1.25 1.2)"/>
+            <use href="#branch" transform="rotate(15) scale(-1.25 1.2)"/>
+            <use href="#flower" transform="translate(0 -10) scale(1.65)"/>
+            <use href="#flower" transform="translate(-135 -17) scale(.9)"/>
+            <use href="#flower" transform="translate(135 -17) scale(.9)"/>
+            <use href="#flower" transform="translate(-220 -35) scale(.6)"/>
+            <use href="#flower" transform="translate(220 -35) scale(.6)"/>
+          </g>
+        </g>
+      </svg>
+      <div class="opening-glow"></div>
       <button class="envelope-seal" type="button" id="open-seal" aria-label="Open Deborah and Caleb's wedding invitation">D&amp;C</button>
     </div>
     <p class="envelope-hint">Tap the seal to open</p>
-    <div class="opening-card" id="opening-card">
-      <div class="opening-card-inside">
-        <p class="card-preface">With grateful hearts</p>
-        <h2 id="opening-title">You're invited.</h2>
-        <p class="card-message">We would love for you to join us as we begin this new chapter together.</p>
-        <span class="card-line" aria-hidden="true"></span>
-        <p class="card-date">Friday, 1 January 2027</p>
-        <p class="card-venue">The Conservatory Garden<br>Lekki, Lagos</p>
-        <button class="card-enter" type="button" id="enter-wedding">Enter the celebration <span aria-hidden="true">↓</span></button>
-      </div>
-      <div class="opening-card-cover" aria-hidden="true">
-        <div class="letter-face"><p class="letter-small">The wedding of</p><p class="letter-names">Deborah &amp; Caleb</p><p class="letter-date">1 January 2027</p></div>
-      </div>
-    </div>
-    <button class="opening-skip" id="skip-opening" type="button">Skip animation</button>
   </div>
 
 <main class="pages" id="pages">
