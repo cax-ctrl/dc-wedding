@@ -18,6 +18,41 @@
 </head>
 <body>
 <a href="#invitation" class="skip-link">Skip invitation cover</a>
+
+  <!-- First-visit invitation: a self-contained overlay. It does not change page snapping. -->
+  <div class="opening-stage" id="opening-stage" role="dialog" aria-modal="true" aria-labelledby="opening-title" hidden>
+    <div class="opening-wash" aria-hidden="true"></div>
+    <div class="envelope" id="envelope" aria-hidden="false">
+      <div class="envelope-back"></div>
+      <div class="envelope-letter">
+        <div class="letter-face">
+          <p class="letter-small">The wedding of</p>
+          <p class="letter-names">Deborah &amp; Caleb</p>
+          <p class="letter-date">1 January 2027</p>
+        </div>
+      </div>
+      <div class="envelope-front"></div>
+      <div class="envelope-flap"><i class="flap-outer"></i><i class="flap-inner"></i></div>
+      <button class="envelope-seal" type="button" id="open-seal" aria-label="Open Deborah and Caleb's wedding invitation">D&amp;C</button>
+    </div>
+    <p class="envelope-hint">Tap the seal to open</p>
+    <div class="opening-card" id="opening-card">
+      <div class="opening-card-inside">
+        <p class="card-preface">With grateful hearts</p>
+        <h2 id="opening-title">You're invited.</h2>
+        <p class="card-message">We would love for you to join us as we begin this new chapter together.</p>
+        <span class="card-line" aria-hidden="true"></span>
+        <p class="card-date">Friday, 1 January 2027</p>
+        <p class="card-venue">The Conservatory Garden<br>Lekki, Lagos</p>
+        <button class="card-enter" type="button" id="enter-wedding">Enter the celebration <span aria-hidden="true">↓</span></button>
+      </div>
+      <div class="opening-card-cover" aria-hidden="true">
+        <div class="letter-face"><p class="letter-small">The wedding of</p><p class="letter-names">Deborah &amp; Caleb</p><p class="letter-date">1 January 2027</p></div>
+      </div>
+    </div>
+    <button class="opening-skip" id="skip-opening" type="button">Skip animation</button>
+  </div>
+
 <main class="pages" id="pages">
   <section class="page cover page-photo" id="home" aria-labelledby="cover-heading">
     <div class="page-photo-image" style="--photo:url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=1800&amp;q=82')"></div>
@@ -156,10 +191,35 @@
       <p class="gift-copy">For friends and family who wish to give, optional registry and contribution details will be shared here once available.</p>
       <p class="gift-note">Registry · Bank transfer · Paystack · Stripe · PayPal</p>
       <p class="closing-signature">Deborah &amp; Caleb</p>
-      <a class="text-link text-link-light" href="#home">Back to the beginning <span aria-hidden="true">↑</span></a>
+      <a class="text-link text-link-light" href="#sponsors">With thanks <span aria-hidden="true">↓</span></a>
     </div>
     <p class="page-footlight">Temporary photographs courtesy of <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a>.</p>
   </section>
+
+  <footer class="page page-ivory sponsor-page" id="sponsors" aria-labelledby="sponsor-heading">
+    <div class="page-inner sponsor-inner">
+      <p class="eyebrow">With appreciation</p>
+      <h2 id="sponsor-heading">A note of thanks.</h2>
+      <div class="hairline"></div>
+      <div class="designer-credit">
+        <span>DESIGN BY</span>
+        <a href="https://theforge.ng/" target="_blank" rel="noopener noreferrer" aria-label="The Forge, website designer">
+          <img src="./assets/theforge.webp" alt="theForge logo" decoding="async"><small>theForge.ng</small>
+        </a>
+      </div>
+      <div class="sponsor-rule"></div>
+      <p class="powered-label">POWERED BY</p>
+      <div class="sponsor-grid" aria-label="Wedding supporters">
+        <div class="sponsor-item"><img src="./assets/hubx.webp" alt="HubX logo" decoding="sync"><span>HubX</span></div>
+        <div class="sponsor-item"><img src="./assets/sourceaxis.webp" alt="SourceAxis Global logo" decoding="sync"><span>SourceAxis Global</span></div>
+        <div class="sponsor-item"><img src="./assets/totalcare.webp" alt="TotalCare Medical logo" decoding="sync"><span>TotalCare Medical</span></div>
+        <div class="sponsor-item"><img src="./assets/jovico.webp" alt="Jovico Autos logo" decoding="sync"><span>Jovico Autos</span></div>
+        <div class="sponsor-item"><img src="./assets/cpbiomed.webp" alt="CP Biomed brand mark" decoding="sync"><span>CP Biomed</span></div>
+      </div>
+      <a class="simple-button button-olive sponsor-cta" href="mailto:hello@theforge.ng?subject=Deborah%20%26%20Caleb%20wedding%20sponsorship%20enquiry">Become a sponsor</a>
+      <a class="sponsor-back" href="#home">Back to the beginning ↑</a>
+    </div>
+  </footer>
 </main>
 </body>
 </html>

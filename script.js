@@ -101,3 +101,47 @@ if (invitationCode && rsvpAPIBase) {
   // Show the RSVP panel immediately for a personally addressed invitation.
   requestAnimationFrame(()=>{$('rsvp').scrollIntoView({behavior:'instant'}); lookup(invitationCode);});
 }
+
+
+// Self-contained first-screen envelope: we do not alter the page-by-page scroller.
+(function setupEnvelope(){
+  const stage=document.getElementById('opening-stage');
+  const pages=document.getElementById('pages');
+  const open=document.getElementById('open-seal');
+  const enter=document.getElementById('enter-wedding');
+  const skip=document.getElementById('skip-opening');
+  if(!stage || !pages || !open || !enter || !skip) return;
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const inviteFromLink = new URLSearchParams(window.location.search).has('invite');
+  // Direct private RSVP links go to their named RSVP view immediately.
+  if (inviteFromLink && window.WEDDING_RSVP_API_BASE_URL) return;
+  stage.hidden=false;
+  pages.inert=true;
+  document.querySelector('.skip-link').inert=true;
+  open.focus({preventScroll:true});
+  let running=false;
+  const timers=[];
+  const after=(ms,fn)=>timers.push(window.setTimeout(fn,ms));
+  function play(){
+    if(running)return;
+    running=true;
+    stage.classList.add('is-open');
+    if(reduceMotion){stage.classList.add('is-rising','is-showing','is-unfolded');enter.focus();return;}
+    after(650,()=>stage.classList.add('is-rising'));
+    after(1600,()=>stage.classList.add('is-showing'));
+    after(2350,()=>{stage.classList.add('is-unfolded');enter.focus({preventScroll:true});});
+  }
+  function leave(){
+    timers.forEach(clearTimeout);
+    if(stage.hidden)return;
+    pages.inert=false;
+    document.querySelector('.skip-link').inert=false;
+    stage.classList.add('is-exiting');
+    const finish=()=>{stage.hidden=true;stage.className='opening-stage';document.getElementById('home').scrollIntoView({block:'start',behavior:'instant'});};
+    if(reduceMotion)finish();else window.setTimeout(finish,510);
+  }
+  open.addEventListener('click',play);
+  enter.addEventListener('click',leave);
+  skip.addEventListener('click',leave);
+  stage.addEventListener('keydown',e=>{if(e.key==='Escape')leave();});
+})();
