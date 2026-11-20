@@ -104,7 +104,7 @@ if (invitationCode && rsvpAPIBase) {
 
 
 
-// Self-contained first-screen envelope: full-screen and direct to the homepage.
+// A genuine physical opening sequence: seal lifts, flaps part, homepage appears.
 (function setupEnvelope(){
   const stage=document.getElementById('opening-stage');
   const pages=document.getElementById('pages');
@@ -112,38 +112,26 @@ if (invitationCode && rsvpAPIBase) {
   const skipLink=document.querySelector('.skip-link');
   if(!stage || !pages || !open) return;
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const inviteFromLink = new URLSearchParams(window.location.search).has('invite');
-  if (inviteFromLink && window.WEDDING_RSVP_API_BASE_URL) return;
-  stage.hidden=false;
+  if(new URLSearchParams(window.location.search).has('invite') && window.WEDDING_RSVP_API_BASE_URL) return;
   pages.inert=true;
-  if (skipLink) skipLink.inert=true;
-  open.focus({preventScroll:true});
-  let running=false;
-  let finished=false;
-  const timers=[];
-  const after=(ms,fn)=>timers.push(window.setTimeout(fn,ms));
+  if(skipLink) skipLink.inert=true;
+  let running=false, finished=false;
   function finish(){
     if(finished) return;
     finished=true;
     pages.inert=false;
-    if (skipLink) skipLink.inert=false;
+    if(skipLink) skipLink.inert=false;
     stage.hidden=true;
-    stage.className='opening-stage';
     document.getElementById('home').scrollIntoView({block:'start',behavior:'instant'});
   }
-  function play(){
-    if(running || finished) return;
+  open.addEventListener('click',()=>{
+    if(running||finished)return;
     running=true;
+    if(reduceMotion){finish();return;}
     stage.classList.add('is-unsealing');
-    if(reduceMotion){
-      stage.classList.add('is-opening','is-opened','is-revealing');
-      finish();
-      return;
-    }
-    after(180,()=>stage.classList.add('is-opening'));
-    after(1320,()=>stage.classList.add('is-opened'));
-    after(1520,()=>stage.classList.add('is-revealing'));
-    after(2080,finish);
-  }
-  open.addEventListener('click',play);
+    window.setTimeout(()=>stage.classList.add('is-lifting'),160);
+    window.setTimeout(()=>stage.classList.add('is-parting'),810);
+    window.setTimeout(()=>stage.classList.add('is-revealing'),1680);
+    window.setTimeout(finish,2160);
+  });
 })();
