@@ -69,7 +69,10 @@
     sponsorPreview.hidden=false;
     sponsorMessage.textContent='';
   });
-  sponsorDialog.addEventListener('close',resetPreview);
+  sponsorDialog.addEventListener('close',function(){
+    logoInput.value='';
+    resetPreview();
+  });
 
   function rowsMarkup(rows){
     return rows.filter(pair=>Array.isArray(pair)&&pair.length===2).map(pair=>
