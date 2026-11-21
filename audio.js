@@ -31,7 +31,7 @@
   const trackDownload=fetch(asset,{cache:'force-cache'}).then(function(response){
     if(!response.ok)throw new Error('Music file unavailable');
     return response.arrayBuffer();
-  });
+  }).then(bytes=>({bytes}),error=>({error}));
 
   function showState(){
     button.classList.toggle('is-muted',!enabled);
@@ -88,7 +88,6 @@
     intro.buffer=original;
     intro.connect(master);
     intro.start(when,0,prepared.introSeconds);
-    intro.stop(when+prepared.introSeconds+.005);
 
     const song=context.createBufferSource();
     song.buffer=prepared.buffer;
@@ -108,8 +107,9 @@
       showState();
       if(!loading){
         loading=(async function(){
-          const bytes=await trackDownload;
-          const decoded=await context.decodeAudioData(bytes.slice(0));
+          const result=await trackDownload;
+          if(result.error)throw result.error;
+          const decoded=await context.decodeAudioData(result.bytes.slice(0));
           scheduleTrack(decoded);
         })();
       }
