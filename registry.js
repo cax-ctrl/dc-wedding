@@ -73,7 +73,11 @@
       const label = item.kind === 'fund' ? 'Flexible gift' : status === 'reserved' ? 'Reserved' : status === 'purchased' ? 'Purchased' : 'Gift idea';
       const hasAmazon = Boolean(item.amazonQuery);
       const amazon = hasAmazon ? '<a class="registry-action-secondary" href="' + amazonUrl(item.amazonQuery) + '" target="_blank" rel="noopener noreferrer" aria-label="Browse Amazon UK for ' + escapeHTML(item.title) + '">Browse Amazon ↗</a>' : '';
-      const reserveButton = hasAmazon ? '<button type="button" class="registry-action-secondary" data-action="reserve" data-id="' + item.id + '"' + (status !== 'available' ? ' disabled' : '') + '>' + (status === 'reserved' ? 'Reserved' : status === 'purchased' ? 'Purchased' : 'Reserve') + '</button>' : '';
+      let ownedHold = false;
+      if (!demo && status === 'reserved') {try {ownedHold = Boolean(sessionStorage.getItem('dc-reservation-' + item.id));} catch (_) {}}
+      const manageable = demo || ownedHold;
+      const reserveButton = hasAmazon && (status === 'available' || manageable) ?
+        '<button type="button" class="registry-reserve-link" data-action="' + ((demo && status !== 'available') ? 'manage' : 'reserve') + '" data-id="' + item.id + '">' + (status === 'available' ? 'Reserve this gift' : 'Manage reservation') + ' ↗</button>' : '';
       return '<article class="registry-card">' +
         '<div class="registry-image-wrap"><img loading="lazy" decoding="async" src="' + item.image + '" alt="" onerror="this.style.opacity=0" />' +
         '<span class="registry-tag ' + (status === 'reserved' || status === 'purchased' ? 'is-' + status : '') + '">' + label + '</span></div>' +
@@ -81,8 +85,8 @@
         '<p class="registry-card-description">' + escapeHTML(item.description) + '</p>' +
         '<p class="registry-card-subline">' + (hasAmazon ? 'Give an amount or purchase later' : 'Give any amount you wish') + '</p>' +
         '<div class="registry-card-actions"><button type="button" class="registry-action-primary" data-action="contribute" data-id="' + item.id + '">Contribute</button>' +
-        (hasAmazon ? amazon + reserveButton : '') +
-        '</div></div></article>';
+        (hasAmazon ? amazon : '') +
+        '</div>' + reserveButton + '</div></article>';
     }).join('');
     statusNode.textContent = chosen.length + ' thoughtful ' + (chosen.length === 1 ? 'gift' : 'gifts') + ' · Contributions are entirely optional.';
     panel.querySelectorAll('.registry-filter').forEach(function (button) {
@@ -99,6 +103,7 @@
     modalTitle.textContent = item ? item.title : 'Other ways to give';
     modalIntro.textContent = item ? item.description : 'A gift from the heart, in whatever way works for you.';
     if (mode === 'reserve') renderReservation(item);
+    else if (mode === 'manage' && demo) renderDemoManager(item);
     else if (mode === 'contribute') renderContribution(item);
     else if (mode === 'other') renderOther();
     if (!dialog.open) dialog.showModal();
@@ -140,7 +145,14 @@
     if (!item || item.kind !== 'physical') return;
     const status = getStatus(item);
     if (status !== 'available') {
-      modalBody.innerHTML = '<p class="registry-dialog-note">This item has already been ' + (status === 'purchased' ? 'purchased' : 'reserved') + '. You can still give a monetary contribution towards another gift.</p>';
+      let token = '';
+      try {token = sessionStorage.getItem('dc-reservation-' + item.id) || '';} catch (_) {}
+      if (demo) {renderDemoManager(item);return;}
+      if (status === 'reserved' && token) {
+        showOwnReservation(item, token);
+        return;
+      }
+      modalBody.innerHTML = '<p class="registry-dialog-note">This item has already been ' + (status === 'purchased' ? 'purchased' : 'reserved') + '. You are welcome to contribute towards another gift.</p>';
       return;
     }
     const enabled = demo || (apiBase && serverAvailable);
@@ -180,13 +192,35 @@
         }
         actualStatus[item.id] = 'reserved';
         render();
-        modalBody.innerHTML = '<p class="registry-dialog-note">Thank you. Your reservation has been recorded. Please check your email for any confirmation details from our organisers.</p>';
+        showOwnReservation(item, data.reservationToken || '');
         notify('Gift reserved.');
       } catch (error) {
         notify(error.message || 'Unable to reserve. Please try again later.', true);
         button.disabled = false;
         refreshFromServer();
       }
+    });
+  }
+  function showOwnReservation(item, token) {
+    modalBody.innerHTML = '<p class="registry-dialog-note">Your reservation is recorded. It is held for up to 72 hours unless an organiser confirms the purchase. Please arrange delivery only after we have shared an approved address.</p>' +
+      '<div class="registry-dialog-actions"><button class="secondary" type="button" id="registry-release-reservation"' + (!token ? ' disabled' : '') + '>Cancel my reservation</button></div>';
+    const release = document.getElementById('registry-release-reservation');
+    if (!release || !token) return;
+    release.addEventListener('click', async function () {
+      release.disabled = true;
+      notify('Releasing your reservation…');
+      try {
+        const response = await fetch(apiBase + '/api/registry/release', {
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({itemId:item.id,reservationToken:token})
+        });
+        if (!response.ok) throw new Error('Could not release the reservation.');
+        try {sessionStorage.removeItem('dc-reservation-' + item.id);} catch (_) {}
+        actualStatus[item.id] = 'available';
+        render();
+        renderReservation(item);
+        notify('Reservation cancelled. This gift is available again.');
+      } catch (error) {notify(error.message || 'Could not release this reservation.', true);release.disabled=false;}
     });
   }
   function renderDemoManager(item) {
@@ -232,7 +266,7 @@
     if (!action) return;
     const item = items.find(function (gift) {return gift.id === action.dataset.id;});
     if (!item) return;
-    if (action.dataset.action === 'reserve' && getStatus(item) !== 'available') return;
+    if (action.dataset.action === 'reserve' && getStatus(item) === 'purchased') return;
     showModal(item, action.dataset.action);
   });
   panel.querySelectorAll('.registry-filter').forEach(function (button) {
