@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./registry.css">
   <script defer src="./rsvp-config.js"></script>
+  <script defer src="./rsvp.js"></script>
   <script defer src="./script.js"></script>
   <script defer src="./registry-config.js"></script>
   <script defer src="./registry.js"></script>
@@ -170,8 +171,8 @@
       <p class="eyebrow light">A little note to our guests</p>
       <h2 id="guest-heading">By Invitation Only</h2>
       <div class="hairline hairline-light"></div>
-      <p class="guest-copy">We can only welcome guests named on an invitation. We are unable to accommodate plus-ones, and children may attend only if individually invited.</p>
-      <p class="guest-small">Please confirm with a reachable phone number by <strong>20 December 2026</strong>. For enquiries, contact the person who shared your invitation.</p>
+      <p class="guest-copy">Places are limited. An RSVP request does not guarantee admission. Only guests who receive a personal confirmation and invitation code will have a reserved place.</p>
+      <p class="guest-small">Please apply individually by <strong>20 December 2026</strong>. Plus-ones and children may attend only if separately confirmed. For enquiries, contact the person who shared your invitation.</p>
       <a class="simple-button button-outline-light" href="#rsvp">RSVP <span aria-hidden="true">↓</span></a>
     </div>
   </section>
@@ -180,24 +181,54 @@
     <div class="page-inner rsvp-inner">
       <p class="eyebrow">The honour of your reply</p>
       <h2 id="rsvp-heading">Will you join us?</h2>
-      <p class="rsvp-deadline">Kindly respond by 20 December 2026</p>
+      <p class="rsvp-deadline">Kindly request your place by 20 December 2026</p>
       <div class="rsvp-form-container">
-        <form id="lookup-form" class="lookup-form">
-          <label for="invitation-code">Your private invitation code</label>
-          <input type="text" name="code" id="invitation-code" placeholder="Enter invitation code" autocomplete="off" maxlength="80" required>
-          <button id="lookup-btn" class="simple-button button-olive" type="submit">Find my invitation</button>
+        <form id="rsvp-request-form" class="rsvp-request-form" autocomplete="on">
+          <div class="rsvp-field">
+            <label for="rsvp-name">Full name</label>
+            <input id="rsvp-name" name="fullName" type="text" autocomplete="name" maxlength="100" placeholder="Enter your full name" required>
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-country">Country</label>
+            <select id="rsvp-country" name="country" required>
+              <option value="NG">Nigeria (+234)</option>
+              <option value="GB">United Kingdom (+44)</option>
+              <option value="US">United States (+1)</option>
+              <option value="CN">China (+86)</option>
+            </select>
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-phone">Active mobile number</label>
+            <div class="rsvp-phone-row">
+              <span id="rsvp-dial-code" class="rsvp-dial-code" aria-hidden="true">+234</span>
+              <input id="rsvp-phone" name="phone" type="tel" autocomplete="tel-national" inputmode="tel" maxlength="24" placeholder="Phone number" aria-describedby="rsvp-phone-hint" required>
+            </div>
+            <p id="rsvp-phone-hint" class="rsvp-field-hint">Use a number where we can reach you directly.</p>
+          </div>
+          <fieldset class="rsvp-methods">
+            <legend>Preferred confirmation method</legend>
+            <div class="rsvp-method-row">
+              <label><input type="radio" name="confirmationMethod" value="SMS" required> Text</label>
+              <label><input type="radio" name="confirmationMethod" value="WhatsApp" checked> WhatsApp</label>
+              <label><input type="radio" name="confirmationMethod" value="WeChat"> WeChat</label>
+            </div>
+          </fieldset>
+          <div id="rsvp-wechat-wrap" class="rsvp-field" hidden>
+            <label for="rsvp-wechat">WeChat ID</label>
+            <input id="rsvp-wechat" name="wechatId" type="text" maxlength="80" placeholder="Your WeChat ID" autocomplete="off">
+          </div>
+          <label class="rsvp-consent"><input type="checkbox" id="rsvp-consent" required><span>I agree to be contacted about this wedding request and admission arrangements.</span></label>
+          <div class="rsvp-honeypot" aria-hidden="true"><label for="rsvp-website">Website</label><input id="rsvp-website" type="text" name="website" tabindex="-1" autocomplete="off"></div>
+          <button type="submit" id="rsvp-submit" class="simple-button button-olive" disabled>Request an Invitation</button>
+          <p id="rsvp-service-note" class="rsvp-service-note">RSVP requests will open when the guest registration service is ready.</p>
         </form>
-        <form id="rsvp-form" hidden>
-          <div class="rsvp-greeting"><p>Named guests on this invitation</p><h3 id="invite-lead"></h3><p id="invite-party-note"></p></div>
-          <fieldset><legend>Attendance</legend><div id="invited-guests"></div></fieldset>
-          <label for="guest-phone">Contact number</label><input type="tel" id="guest-phone" name="phone" placeholder="Include country code" autocomplete="tel" required>
-          <label for="guest-message">A note for us (optional)</label><textarea id="guest-message" name="message" rows="2" maxlength="400"></textarea>
-          <label class="check-line"><input id="guest-consent" name="consent" type="checkbox" required><span>I agree to provide these details for wedding RSVP communication.</span></label>
-          <button id="submit-rsvp" class="simple-button button-olive" type="submit">Submit my RSVP</button>
-          <button id="change-invite" class="small-link-button" type="button">Use another code</button>
-        </form>
-        <div id="rsvp-success" tabindex="-1" hidden><h3>Thank you for replying.</h3><p id="success-copy"></p><p>Reference: <strong id="success-ref"></strong></p><p id="message-status"></p><button id="edit-rsvp" class="small-link-button" type="button">Update your reply</button></div>
-        <p id="rsvp-status" role="status" aria-live="polite"></p>
+        <div id="rsvp-success" class="rsvp-success" tabindex="-1" hidden>
+          <h3>Request received.</h3>
+          <p>Thank you for your interest in celebrating with us. Places are limited, and your request does not yet reserve a seat.</p>
+          <p class="rsvp-success-emphasis">Only a personal confirmation message with your invitation code confirms admission.</p>
+          <p>Please present your code and name at the entrance if confirmed.</p>
+        </div>
+        <p id="rsvp-status" class="rsvp-status" role="status" aria-live="polite"></p>
       </div>
       <a href="#gifts" class="text-link rsvp-next">Gratitude <span aria-hidden="true">↓</span></a>
     </div>
