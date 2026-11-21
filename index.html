@@ -19,6 +19,7 @@
   <script defer src="./rsvp-config.js"></script>
   <script defer src="./rsvp.js"></script>
   <script defer src="./script.js"></script>
+  <script defer src="./story.js"></script>
   <script defer src="./registry-config.js"></script>
   <script defer src="./registry.js"></script>
   <script defer src="./legal.js"></script>
@@ -145,17 +146,44 @@
     </div>
   </section>
 
-  <section class="page page-photo story-page" id="story" aria-labelledby="story-heading">
-    <div class="page-photo-image" style="--photo:url('https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&amp;fit=crop&amp;w=1800&amp;q=82')"></div>
-    <div class="page-wash"></div>
-    <div class="page-inner narrow">
-      <p class="eyebrow light">A few favourite moments</p>
-      <h2 id="story-heading">Our Story</h2>
-      <div class="hairline hairline-light"></div>
-      <p class="story-copy">The moments that brought us here deserve a page of their own.</p>
-      <p class="story-small">Our photographs and story will be shared here soon.</p>
-      <p class="story-tag">#DeborahAndCaleb2027 <span>(proposed)</span></p>
-      <a href="#colours" class="text-link text-link-light">Our colours <span aria-hidden="true">↓</span></a>
+  <section class="page page-ivory story-page" id="story" aria-labelledby="story-heading">
+    <div class="page-inner story-inner">
+      <p class="story-eyebrow">Our Love Story</p>
+      <h2 id="story-heading">When God Ordered Our Steps</h2>
+      <blockquote class="story-verse">
+        <p>“A man's heart deviseth his way: but the LORD directeth his steps.”</p>
+        <cite>Proverbs 16:9 (KJV)</cite>
+      </blockquote>
+      <div class="story-rule" aria-hidden="true"></div>
+
+      <div class="story-narrative">
+        <p>We were each walking our own path, carrying different dreams, plans, and expectations. Little did we know that, in His perfect wisdom, God was already writing a beautiful love story of His own.</p>
+        <p>There was a time when we were simply two people going about our everyday lives, unaware of what He was preparing behind the scenes.</p>
+        <p>Then, in His perfect timing, our paths crossed.<br>Friendship grew.<br>Our hearts drew closer.<br>And love found its place.</p>
+        <p>Looking back now, we can see that nothing was too early and nothing was too late. Every step unfolded just as God intended.</p>
+        <p class="story-as-scripture">As Scripture says:</p>
+      </div>
+
+      <blockquote class="story-verse story-second-verse">
+        <p>“He hath made every thing beautiful in his time…”</p>
+        <cite>Ecclesiastes 3:11 (KJV)</cite>
+      </blockquote>
+      <div class="story-rule" aria-hidden="true"></div>
+
+      <div class="story-gallery" aria-label="A few favourite moments">
+        <h3>A few favourite moments</h3>
+        <div class="story-thumbnails">
+          <button type="button" class="story-thumbnail" data-story-photo="1" aria-label="Expand our first photograph">
+            <img src="./assets/story-moment-1.svg" alt="Illustrated photograph of Deborah and Caleb making playful expressions together" loading="lazy" decoding="async" width="320" height="427">
+            <span class="story-expand-icon" aria-hidden="true">⛶</span>
+          </button>
+          <button type="button" class="story-thumbnail" data-story-photo="2" aria-label="Expand our second photograph">
+            <img src="./assets/story-moment-2.svg" alt="Illustrated photograph of Deborah and Caleb smiling together" loading="lazy" decoding="async" width="320" height="427">
+            <span class="story-expand-icon" aria-hidden="true">⛶</span>
+          </button>
+        </div>
+      </div>
+      <a href="#colours" class="story-next-link">Our colours <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -419,6 +447,13 @@
       <button type="button" id="gift-status-refresh" hidden>Check verification status</button>
       <button type="button" data-close-giving>Close</button>
     </div>
+  </div>
+</dialog>
+
+<dialog class="story-lightbox" id="story-lightbox" aria-label="Expanded photograph from our story">
+  <div class="story-lightbox-inner">
+    <button type="button" class="story-lightbox-close" id="story-lightbox-close" aria-label="Close expanded photograph">×</button>
+    <img id="story-lightbox-photo" src="" alt="" width="640" height="854">
   </div>
 </dialog>
 
