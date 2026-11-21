@@ -214,3 +214,87 @@
 @media(max-width:900px){
   .page#registry{padding-right:max(58px,calc(49px + env(safe-area-inset-right)))!important}
 }
+
+/* Bank transfer instructions and self-hosted Alipay QR. */
+.registry-payment-instructions{
+  padding:14px 15px 10px;
+  border:1px solid #d9e0d5;
+  border-radius:8px;
+  background:#f7f8f4;
+}
+.registry-bank-recipient{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:7px 15px;
+  margin:0 0 13px;
+  font:400 .75rem var(--sans);
+  color:#647361;
+}
+.registry-bank-recipient strong{font:600 .86rem var(--sans);color:#314e38}
+.registry-bank-group+.registry-bank-group{margin-top:14px}
+.registry-bank-group h4{
+  font:600 .72rem/1.4 var(--sans);
+  color:#536b56;
+  margin:0 0 5px;
+  letter-spacing:.01em;
+}
+.registry-bank-group .registry-bank-details{
+  margin:0;
+  display:grid;
+  gap:3px;
+}
+.registry-bank-group .registry-bank-details>div{
+  padding:7px 0;
+  border-bottom:1px solid #e2e8df;
+}
+.registry-bank-group .registry-bank-details dt{flex:1 1 48%;font-size:.69rem;line-height:1.5}
+.registry-bank-group .registry-bank-details dd{
+  flex:1 1 40%;
+  font-size:.75rem;
+  line-height:1.5;
+  user-select:text;
+}
+.registry-alipay-panel{
+  display:grid;
+  grid-template-columns:minmax(0,200px) minmax(0,1fr);
+  gap:17px;
+  align-items:center;
+  background:#f5f7f2;
+  border:1px solid #e0e5da;
+  border-radius:9px;
+  padding:13px;
+  margin-top:6px;
+}
+.registry-alipay-qr{
+  display:block;width:100%;height:auto;
+  max-width:200px;aspect-ratio:1;
+  border-radius:5px;
+  background:#fff;
+  image-rendering:crisp-edges;
+}
+.registry-alipay-description{display:flex;flex-direction:column;gap:9px;color:#536751;font:400 .76rem/1.4 var(--sans)}
+.registry-alipay-description>strong{font:600 1rem/1.2 var(--sans);color:#2f5038}
+.registry-alipay-description span strong{color:#2e5137}
+.registry-alipay-description a{
+  display:inline-flex;
+  align-self:flex-start;
+  color:#41694b;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+@media(max-width:550px){
+  .registry-alipay-panel{grid-template-columns:minmax(0,148px) minmax(0,1fr);gap:10px;padding:10px}
+  .registry-alipay-qr{max-width:148px}
+  .registry-alipay-description{font-size:.7rem;gap:6px}
+  .registry-alipay-description>strong{font-size:.85rem}
+  .registry-payment-instructions{padding:12px 11px}
+  .registry-bank-group .registry-bank-details dt{flex:1 1 52%}
+  .registry-bank-group .registry-bank-details dd{font-size:.7rem}
+}
+@media(max-width:390px){
+  .registry-alipay-panel{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .registry-alipay-description{align-items:center}
+  .registry-alipay-description a{align-self:center}
+}
