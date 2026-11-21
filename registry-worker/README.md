@@ -22,4 +22,4 @@ The checkout endpoint deliberately returns 503. Connecting Paystack, Stripe or P
 - Verify image licences, selected Amazon listings, receiving currencies and legal/privacy wording.
 - Test with keyboard, small-screen Safari and real payment sandboxes before switching live.
 
-Current physical gifts include Cars (replacing Kindle). The public site displays one Contribute button per gift and does not take reservations. The D1 database remains optional for future admin-managed gift status. CNY/Alipay transfer and donation accounting must be verified before activation.
+Current physical gifts include Cars (replacing Kindle). The public site displays one Contribute button per gift and does not take reservations. The D1 database remains optional for future admin-managed gift status. A scannable Alipay QR and public transfer instructions are now available on the website for manual payments; they do not create any automatic payment confirmation. Gift and donation accounting, beneficiary verification and the proposed maternal/newborn-care programme still require organiser controls.
