@@ -40,3 +40,13 @@ The private organiser Google Sheet is shared directly with authorised organisers
 The final sponsor page shows one **Trust & Legals** link **above Back to the beginning**, opening a same-page panel with **Privacy**, **Terms of Use** and **Cookies** tabs. The RSVP form has one concise **Privacy Policy** link to that same panel.
 
 **Pending before the RSVP service is opened:** confirm the formal data controller's legal identity and direct contact, HubX Limited's role (if any), any specific optional HubX outreach purpose and consent channel, the records retention/deletion schedule, cross-border processing details, and gift/donation receiver/refund terms. Do not repurpose wedding telephone numbers for HubX marketing merely because they were supplied for RSVP. A separate unticked, specific opt-in and an auditable consent record will be needed before implementing secondary marketing; this is intentionally not activated yet.
+
+## Sponsorship and gift-payment acknowledgements
+
+The sponsor button on the final invitation page now opens an on-site form for the **NGN 10,000,000** sponsorship package. It collects sponsor name, contact email, an optional PNG/JPEG/WebP logo (2 MB maximum), preferred payment currency and method, and an optional transfer reference. The existing HubX Limited-DC Event Kuda details are shown for NGN bank transfer. GBP, USD, EUR and CNY are enquiries for an agreed equivalent; no exchange rate is invented. Stripe and PayPal are not currently active for sponsorship. Uploaded logos are not displayed publicly until approval.
+
+Bank and Alipay gift screens now include **I have sent a transfer**. This opens a payment-notice form. A genuine backend acknowledgment is labelled **Gift notice received**; only an organiser-verified payment is labelled **Gift Recorded**. This does not claim that copying bank details or opening Alipay completes payment. The frontend has no simulated payment-success state.
+
+The secure D1/R2 giving service is in [giving-service/](giving-service/) but is **not deployed or connected**. The public `registry-config.js` keeps `givingApiBase` empty. Until configured and tested, submitting a sponsor enquiry or gift notice offers a clear copy-to-clipboard fallback, which must be sent to an organiser separately and is not recorded. Logo previews in this mode stay on the user's device. The giving service requires private Cloudflare bindings and administrator-controlled verification.
+
+Privacy and terms now describe the additional sponsor and gift notice data. The organiser must still finalise legal responsibility, retention, package benefits, logo usage, international settlements and refund arrangements before launching real intake.
