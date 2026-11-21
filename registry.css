@@ -65,3 +65,14 @@
 @media(max-width:550px){.registry-page{padding-inline:15px}.registry-page .registry-inner{padding-top:24px}.registry-topbar{margin-bottom:18px}.registry-topbar-mark{font-size:.51rem;letter-spacing:.15em}.registry-intro h2{font-size:3.5rem}.registry-filters{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;padding-bottom:5px}.registry-filters::-webkit-scrollbar{display:none}.registry-filter{flex:0 0 auto;padding:8px 13px;font-size:.7rem;min-height:38px}.registry-grid{gap:9px}.registry-image-wrap{height:110px}.registry-card-content{padding:12px 10px}.registry-card h3{font-size:1.26rem}.registry-card-description{font-size:.71rem;line-height:1.38;min-height:52px;margin-bottom:10px}.registry-card-subline{font-size:.61rem}.registry-card-actions{gap:5px}.registry-card-actions button,.registry-card-actions a{width:100%;flex:1;font-size:.68rem;min-height:35px}.registry-tag{font-size:.55rem;padding:4px 6px;top:6px;right:6px}.registry-give-options{padding:13px 7px}.registry-give-options button{font-size:.65rem;min-height:70px;padding:4px}.registry-end p{font-size:1.1rem}}
 @media(max-width:355px){.registry-grid{grid-template-columns:1fr}.registry-image-wrap{height:170px}.registry-card h3{font-size:1.65rem}}
 @media(prefers-reduced-motion:reduce){.registry-card img,.registry-filter{transition:none}}
+
+/* Subtle botanical framing, inspired by the approved registry design. */
+.registry-page{position:relative;isolation:isolate}
+.registry-page::before,.registry-page::after{content:'';position:absolute;pointer-events:none;width:220px;height:215px;background:url('./assets/registry-leaf.svg') center/contain no-repeat;opacity:.56;z-index:0}
+.registry-page::before{top:0;right:0}
+.registry-page::after{bottom:0;left:0;transform:rotate(180deg);opacity:.24}
+.registry-page .registry-inner{position:relative;z-index:1}
+.registry-give-options button svg{display:block;stroke:#a88855;flex:0 0 auto}
+.registry-reserve-link{display:inline-flex;justify-content:flex-start;align-items:center;border:0;background:transparent;color:#50624c;font:500 .68rem var(--sans);padding:6px 0 0;text-decoration:underline;text-underline-offset:3px;align-self:flex-start}
+.registry-reserve-link:disabled{color:#8c948a;cursor:not-allowed;text-decoration:none}
+@media(max-width:550px){.registry-page::before{width:120px;height:130px;opacity:.31}.registry-page::after{width:130px;height:135px;opacity:.16}.registry-reserve-link{font-size:.65rem}}
