@@ -9,8 +9,8 @@
   const buttons=Array.from(document.querySelectorAll('[data-story-photo]'));
   if(!dialog||!image||!close||!buttons.length)return;
   const photos={
-    '1':{src:'./assets/story-moment-1.svg',alt:'Deborah and Caleb making playful expressions together'},
-    '2':{src:'./assets/story-moment-2.svg',alt:'Deborah and Caleb smiling together'}
+    '1':{src:'./assets/story-moment-1.webp',alt:'Deborah and Caleb making playful expressions together'},
+    '2':{src:'./assets/story-moment-2.webp',alt:'Deborah and Caleb smiling together'}
   };
   let previousFocus=null;
   buttons.forEach(function(button){
