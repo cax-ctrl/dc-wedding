@@ -1,246 +1,242 @@
 'use strict';
-/* Deborah & Caleb — a single, straightforward contribution journey. */
+/* Wedding registry: one contribution action per gift, with no invented payment destinations. */
 (function () {
   const panel = document.getElementById('registry');
   const grid = document.getElementById('registry-grid');
   const dialog = document.getElementById('registry-dialog');
   if (!panel || !grid || !dialog) return;
-
   const items = [
     {id:'first-home',title:'Our First Home Fund',kind:'fund',group:'home',description:'Help us create a home together, wherever our journey takes us.',image:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=82'},
     {id:'honeymoon',title:'Honeymoon Experiences',kind:'fund',group:'travel',description:'A contribution towards memorable experiences on our honeymoon.',image:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=82'},
     {id:'flights',title:'Flights & Future Adventures',kind:'fund',group:'travel',description:'Support the travels and new experiences we will share.',image:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=82'},
     {id:'date-nights',title:'Date Nights for Two',kind:'fund',group:'travel',description:'Help us make time for special evenings and shared memories.',image:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=82'},
-    {id:'home-decor',title:'Home Furnishings & Décor',kind:'fund',group:'home',description:'Thoughtful pieces to make wherever we settle warm and welcoming.',image:'https://images.unsplash.com/photo-1767963758785-b9def36c13e3?auto=format&fit=crop&w=800&q=82'},
-    {id:'kitchen',title:'Our Kitchen Essentials',kind:'fund',group:'home',description:'Everyday essentials for meals and moments around our table.',image:'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=800&q=82'},
+    {id:'home-decor',title:'Home Furnishings & Décor',kind:'fund',group:'home',description:'Thoughtful pieces to make wherever we settle warm and welcoming.',image:'https://images.unsplash.com/photo-1767963758785-b9def36c13e3?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'SourceAxis publishes sourcing assessment fees and quotes project services separately; this is not a retail product catalogue.'},
+    {id:'kitchen',title:'Our Kitchen Essentials',kind:'fund',group:'home',description:'Everyday essentials for meals and moments around our table.',image:'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'Explore sourcing assessment and pricing, rather than an immediate product purchase.'},
     {id:'memories',title:'Wedding Memories & Photo Album',kind:'fund',group:'home',description:'A beautiful way to preserve the story of our wedding.',image:'https://images.unsplash.com/photo-1677658288237-2fff291a34f0?auto=format&fit=crop&w=800&q=82'},
     {id:'luggage',title:'Matching Travel Luggage',kind:'physical',group:'travel',description:'A durable luggage set for the many adventures ahead.',image:'https://images.unsplash.com/photo-1740470077240-e0ff892c21a5?auto=format&fit=crop&w=800&q=82',amazonQuery:'matching carry on luggage suitcase set'},
-    {id:'kindles',title:'Kindle E-Readers for Two',kind:'physical',group:'travel',description:'For shared reading, travel and quiet evenings together.',image:'https://images.unsplash.com/photo-1543443807-7f734bdb8c82?auto=format&fit=crop&w=800&q=82',amazonQuery:'Kindle Paperwhite e reader'},
+    {id:'cars',title:'A Car for Our Next Chapter',kind:'physical',group:'travel',description:'A contribution towards a vehicle for the road ahead.',image:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://jovicoworld.com/cars',referenceLabel:'Browse Cars',referenceNote:'Explore available cars and pre-orders with Jovico; prices and delivery arrangements depend on the chosen vehicle.'},
     {id:'photo-frame',title:'Digital Photo Frame',kind:'physical',group:'home',description:'A frame for our favourite memories with family and friends.',image:'https://images.unsplash.com/photo-1765210866964-5e89d82a8eb9?auto=format&fit=crop&w=800&q=82',amazonQuery:'digital picture frame wifi'},
     {id:'bedding',title:'Premium Bedding Collection',kind:'physical',group:'home',description:'Comfortable, timeless bedding for our future home.',image:'https://images.unsplash.com/photo-1601276174812-63280a55656e?auto=format&fit=crop&w=800&q=82',amazonQuery:'luxury cotton bedding duvet cover set'},
-    {id:'coffee',title:'Coffee & Tea Station',kind:'physical',group:'home',description:'A coffee maker and tea essentials for slow mornings together.',image:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=82',amazonQuery:'coffee machine kettle tea station'}
+    {id:'coffee',title:'Coffee & Tea Station',kind:'physical',group:'home',description:'A coffee maker and tea essentials for slow mornings together.',image:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'SourceAxis provides sourcing assessment and scoped quotations, not a ready-to-buy appliance listing.'},
+    {id:'cpbiomed',title:'Reproductive Health Equipment',kind:'fund',group:'community',description:'A contribution towards reproductive-health equipment and supplies.',image:'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://cpbiomed.com/products/',referenceLabel:'Explore CP Biomed',referenceNote:'CP Biomed lists specialist assisted-reproduction equipment and laboratory supplies.'},
+    {id:'hubx',title:'Education & Career Support',kind:'fund',group:'community',description:'Support opportunities for learning and professional development.',image:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://hubxconsulting.com/',referenceLabel:'Explore HubX',referenceNote:'Explore learning, career and professional-development pathways offered through HubX.'},
+    {id:'totalcare',title:'Maternal & Newborn Care',kind:'fund',group:'community',description:'A proposed donation towards healthcare for pregnant women and newborns.',image:'./assets/totalcare-transparent.webp',logo:true,donation:true}
   ];
-
   const cfg = window.WEDDING_REGISTRY_CONFIG || {};
-  const apiBase = String(cfg.apiBase || '').trim().replace(/\/$/, '');
-  const paymentBase = String(cfg.paymentApiBase || '').trim().replace(/\/$/, '');
+  const apiBase = String(cfg.apiBase || '').trim().replace(/\/$/,'');
+  const paymentBase = String(cfg.paymentApiBase || '').trim().replace(/\/$/,'');
   const enabledPayments = Array.isArray(cfg.enabledPaymentMethods) ? cfg.enabledPaymentMethods : [];
   const bankAccounts = cfg.bankAccounts && typeof cfg.bankAccounts === 'object' ? cfg.bankAccounts : {};
-  const currentStatus = Object.create(null);
+  const status = Object.create(null);
   let activeFilter = 'all';
   const statusLine = document.getElementById('registry-status-line');
-  const title = document.getElementById('registry-dialog-title');
-  const intro = document.getElementById('registry-dialog-intro');
-  const body = document.getElementById('registry-dialog-body');
-  const message = document.getElementById('registry-dialog-message');
-  const symbols = {USD:'$',GBP:'£',NGN:'₦'};
+  const modalTitle = document.getElementById('registry-dialog-title');
+  const modalIntro = document.getElementById('registry-dialog-intro');
+  const modalBody = document.getElementById('registry-dialog-body');
+  const modalMessage = document.getElementById('registry-dialog-message');
+  const symbol = {USD:'$',GBP:'£',NGN:'₦',CNY:'¥'};
 
   function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, function (char) {
+    return String(value).replace(/[&<>"']/g, function(char) {
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char];
     });
   }
-  function amazonUrl(query) {
-    return 'https://www.amazon.co.uk/s?k=' + encodeURIComponent(query);
+  function reference(item) {
+    if (item.referenceUrl) return {url:item.referenceUrl,label:item.referenceLabel || 'Explore options',note:item.referenceNote || ''};
+    if (item.amazonQuery) return {url:'https://www.amazon.co.uk/s?k='+encodeURIComponent(item.amazonQuery),label:'Browse Amazon',note:'Browse suggested products. Please confirm the delivery address before ordering.'};
+    return null;
   }
-  function badge(item) {
-    const status = currentStatus[item.id];
-    if (item.kind !== 'physical' || !['reserved','purchased'].includes(status)) return '';
-    return '<span class="registry-tag is-' + status + '">' + (status === 'reserved' ? 'Reserved' : 'Purchased') + '</span>';
-  }
-  function visibleItems() {
-    return items.filter(function (item) {
-      if (activeFilter === 'all') return true;
-      if (activeFilter === 'fund') return item.kind === 'fund';
-      return item.group === activeFilter;
+  function render() {
+    const filtered = items.filter(function(item) {
+      return activeFilter === 'all' || (activeFilter === 'fund' && item.kind === 'fund') || item.group === activeFilter;
     });
-  }
-  function renderCards() {
-    const selected = visibleItems();
-    grid.innerHTML = selected.map(function (item) {
-      return '<article class="registry-card">' +
-        '<div class="registry-image-wrap"><img loading="lazy" decoding="async" src="' + item.image + '" alt="" onerror="this.style.opacity=0">' + badge(item) + '</div>' +
-        '<div class="registry-card-content"><h3>' + escapeHTML(item.title) + '</h3>' +
-        '<p class="registry-card-description">' + escapeHTML(item.description) + '</p>' +
-        '<button class="registry-action-primary" type="button" data-id="' + item.id + '">Contribute</button>' +
+    grid.innerHTML = filtered.map(function(item) {
+      const stage = status[item.id];
+      const badge = item.kind === 'physical' && ['reserved','purchased'].includes(stage)
+        ? '<span class="registry-tag is-'+stage+'">'+(stage==='reserved'?'Reserved':'Purchased')+'</span>' : '';
+      return '<article class="registry-card">'+
+        '<div class="registry-image-wrap'+(item.logo?' registry-logo-wrap':'')+'">'+
+        '<img src="'+item.image+'" loading="lazy" decoding="async" alt="'+(item.logo?'TotalCare Medical logo':'')+'" onerror="this.style.opacity=0">'+badge+'</div>'+
+        '<div class="registry-card-content"><h3>'+escapeHTML(item.title)+'</h3>'+
+        '<p class="registry-card-description">'+escapeHTML(item.description)+'</p>'+
+        '<button class="registry-action-primary" type="button" data-id="'+item.id+'">Contribute</button>'+
         '</div></article>';
     }).join('');
-    statusLine.textContent = selected.length + ' gift' + (selected.length===1 ? '' : 's');
-    panel.querySelectorAll('.registry-filter').forEach(function (button) {
-      button.setAttribute('aria-pressed', String(button.dataset.filter === activeFilter));
+    statusLine.textContent = filtered.length+' gift'+(filtered.length===1?'':'s');
+    panel.querySelectorAll('.registry-filter').forEach(function(button) {
+      button.setAttribute('aria-pressed', String(button.dataset.filter===activeFilter));
     });
   }
-  function notify(text, error) {
-    message.textContent = text || '';
-    message.style.color = error ? '#8b4e41' : '#4c6549';
+  function notify(text,error) {
+    modalMessage.textContent = text || '';
+    modalMessage.style.color = error ? '#985246' : '#526b50';
   }
-  function openModal(item, mode) {
-    notify('');
-    title.textContent = item ? item.title : mode === 'contact' ? 'Delivery address' : 'A gift of your choice';
-    intro.textContent = item ? item.description : mode === 'contact'
-      ? 'A note about sending a physical gift.' : 'Choose the amount and payment method that suit you.';
-    if (mode === 'contact') renderContact();
-    else if (item && item.amazonQuery) renderItemChoices(item);
-    else renderTransfer(item, 'bank');
-    if (!dialog.open) dialog.showModal();
-  }
-  function renderContact() {
-    title.textContent = 'Delivery address';
-    intro.textContent = 'A note about sending a physical gift.';
+  function contact() {
+    modalTitle.textContent = 'Delivery address';
+    modalIntro.textContent = 'Please contact us before arranging delivery of a physical gift.';
     const email = String(cfg.contactEmail || '').trim();
     const whatsapp = String(cfg.contactWhatsApp || '').replace(/[^\d]/g,'');
-    body.innerHTML =
-      '<p class="registry-dialog-note">We have not confirmed a delivery country or address. Before ordering a physical gift, please contact us to arrange delivery.</p>' +
-      (email ? '<p class="registry-dialog-actions"><a class="primary" href="mailto:' + encodeURIComponent(email) + '?subject=Deborah%20%26%20Caleb%20%E2%80%94%20Gift%20delivery">Email us</a></p>' : '') +
-      (whatsapp ? '<p class="registry-dialog-actions"><a class="secondary" href="https://wa.me/' + whatsapp + '?text=Hello%2C%20I%20would%20like%20to%20arrange%20a%20wedding%20gift%20delivery." target="_blank" rel="noopener noreferrer">Contact on WhatsApp</a></p>' : '') +
-      (!email && !whatsapp ? '<p class="registry-dialog-note">Please contact the person who shared your wedding invitation to request our delivery details.</p>' : '');
+    modalBody.innerHTML =
+      '<p class="registry-dialog-note">Our delivery country and address have not yet been confirmed.</p>'+
+      (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '<div class="registry-dialog-actions"><a class="primary" href="mailto:'+encodeURIComponent(email)+'?subject=Wedding%20gift%20delivery">Email us</a></div>' : '')+
+      (whatsapp ? '<div class="registry-dialog-actions"><a class="secondary" href="https://wa.me/'+whatsapp+'" target="_blank" rel="noopener noreferrer">WhatsApp us</a></div>' : '')+
+      (!email && !whatsapp ? '<p class="registry-dialog-note">Please contact the person who shared your invitation for delivery details.</p>' : '');
   }
-  function renderItemChoices(item) {
-    const status = currentStatus[item.id];
-    const itemUnavailable = ['reserved','purchased'].includes(status);
-    body.innerHTML =
-      '<p class="registry-step-label">Choose how you would like to give</p>' +
-      '<div class="registry-choice-row">' +
-      (itemUnavailable ?
-        '<span class="registry-choice-muted">This item is ' + status + '. Please consider contributing its equivalent value instead.</span>' :
-        '<a class="registry-choice" href="' + amazonUrl(item.amazonQuery) + '" target="_blank" rel="noopener noreferrer"><strong>Browse Amazon</strong><span>Explore suggested items ↗</span></a>') +
-      '<button type="button" id="registry-choose-transfer" class="registry-choice"><strong>Transfer</strong><span>Give an equivalent value</span></button>' +
-      '</div>' +
-      '<p class="registry-dialog-note">Amazon opens in a new tab. Please contact us for the delivery address before placing an order.</p>' +
-      '<button type="button" id="registry-choice-contact" class="registry-inline-link">Contact us for delivery address</button>';
-    document.getElementById('registry-choose-transfer').addEventListener('click',function () {renderTransfer(item,'bank');});
-    document.getElementById('registry-choice-contact').addEventListener('click',renderContact);
+  function options(item) {
+    const ref = reference(item);
+    if (!ref) {transfer(item,false);return;}
+    modalTitle.textContent = item.title;
+    modalIntro.textContent = item.description;
+    const stage = status[item.id];
+    const unavailable = item.kind==='physical' && ['reserved','purchased'].includes(stage);
+    modalBody.innerHTML =
+      '<p class="registry-step-label">Choose how you would like to give</p>'+
+      '<div class="registry-choice-row">'+
+      (unavailable ? '<span class="registry-choice-muted">This item is '+stage+'. You can still contribute its equivalent value.</span>' :
+        '<a class="registry-choice" href="'+escapeHTML(ref.url)+'" target="_blank" rel="noopener noreferrer"><strong>'+escapeHTML(ref.label)+'</strong><span>Opens in a new tab ↗</span></a>')+
+      '<button class="registry-choice" type="button" id="registry-transfer-choice"><strong>Transfer</strong><span>Contribute an amount</span></button></div>'+
+      '<p class="registry-dialog-note">'+escapeHTML(ref.note)+'</p>'+
+      (item.kind==='physical'?'<button type="button" class="registry-inline-link" id="registry-delivery-choice">Contact us for delivery address</button>':'');
+    document.getElementById('registry-transfer-choice').addEventListener('click',function(){transfer(item,false);});
+    const delivery=document.getElementById('registry-delivery-choice');
+    if(delivery) delivery.addEventListener('click',contact);
   }
-  function getConfiguredBank(currency) {
-    const account = bankAccounts[currency];
-    if (!account || !account.accountName || !account.bankName || !account.accountNumber) return null;
-    return account;
+  function open(item,mode) {
+    notify('');
+    modalTitle.textContent = item ? item.title : mode==='contact'?'Delivery address':'Custom gift';
+    modalIntro.textContent = item?item.description:mode==='contact'?'How to arrange delivery':'Tell us what your gift is for.';
+    if(mode==='contact') contact();
+    else if(item && reference(item)) options(item);
+    else transfer(item,mode==='custom');
+    if(!dialog.open) dialog.showModal();
   }
-  function renderTransfer(item, initialMethod) {
-    body.innerHTML =
-      '<form id="registry-contribution-form">' +
-      '<div class="registry-form-heading"><span class="registry-step-label">Gift amount</span>' +
-      (item && item.amazonQuery ? '<button class="registry-inline-link" type="button" id="registry-back-to-choices">← Gift options</button>' : '') +
-      '</div>' +
-      '<div class="registry-amount-row">' +
-      '<label class="registry-field registry-currency-field" for="registry-currency"><span>Currency</span><select id="registry-currency" name="currency"><option value="USD">$ USD</option><option value="GBP">£ GBP</option><option value="NGN">₦ NGN</option></select></label>' +
-      '<label class="registry-field registry-value-field" for="registry-amount"><span>Amount</span><span class="registry-amount-input"><span id="registry-amount-symbol" aria-hidden="true">$</span><input type="number" id="registry-amount" name="amount" min="0.01" step="0.01" inputmode="decimal" autocomplete="off" placeholder="0.00" required></span></label>' +
-      '</div>' +
-      '<fieldset class="registry-methods"><legend class="registry-step-label">Payment option</legend>' +
-      '<label><input type="radio" name="payment-method" value="bank"><span>Bank transfer</span></label>' +
-      '<label><input type="radio" name="payment-method" value="paypal"><span>PayPal</span></label>' +
-      '<label><input type="radio" name="payment-method" value="stripe"><span>Stripe</span></label>' +
-      '</fieldset>' +
-      '<div id="registry-method-information" class="registry-method-information" aria-live="polite"></div>' +
-      '<div class="registry-dialog-actions" id="registry-checkout-actions"></div>' +
+  function transfer(item,isCustom) {
+    const ref=item?reference(item):null;
+    modalTitle.textContent=item?item.title:'Custom gift';
+    modalIntro.textContent=item?item.description:'Tell us what your gift is for and choose an amount.';
+    modalBody.innerHTML =
+      '<form id="registry-contribution-form">'+
+      (isCustom?'<label class="registry-field registry-gift-name-field" for="registry-gift-name"><span>Gift name or purpose</span><input type="text" id="registry-gift-name" name="giftName" maxlength="120" placeholder="What is your gift for?" autocomplete="off" required></label>':'')+
+      '<div class="registry-form-heading"><span class="registry-step-label">Gift amount</span>'+
+      (ref?'<button class="registry-inline-link" type="button" id="registry-back-to-choices">← Gift options</button>':'')+'</div>'+
+      '<div class="registry-amount-row">'+
+      '<label class="registry-field registry-currency-field" for="registry-currency"><span>Currency</span><select id="registry-currency" name="currency"><option value="USD">$ USD</option><option value="GBP">£ GBP</option><option value="NGN">₦ NGN</option><option value="CNY">¥ CNY</option></select></label>'+
+      '<label class="registry-field registry-value-field" for="registry-amount"><span>Amount</span><span class="registry-amount-input"><span id="registry-amount-symbol" aria-hidden="true">$</span><input id="registry-amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal" autocomplete="off" required></span></label>'+
+      '</div>'+
+      '<fieldset class="registry-methods"><legend class="registry-step-label">Payment option</legend>'+
+      '<label><input type="radio" name="payment-method" value="bank" checked><span>Bank transfer</span></label>'+
+      '<label><input type="radio" name="payment-method" value="paypal"><span>PayPal</span></label>'+
+      '<label><input type="radio" name="payment-method" value="stripe"><span>Stripe</span></label>'+
+      '<label><input type="radio" name="payment-method" value="alipay"><span>Alipay transfer</span></label>'+
+      '</fieldset>'+
+      '<div id="registry-method-information" class="registry-method-information" aria-live="polite"></div>'+
+      '<div class="registry-dialog-actions" id="registry-checkout-actions"></div>'+
       '</form>';
-    const form = document.getElementById('registry-contribution-form');
-    const currency = document.getElementById('registry-currency');
-    const amount = document.getElementById('registry-amount');
-    const methodInfo = document.getElementById('registry-method-information');
-    const actions = document.getElementById('registry-checkout-actions');
-    const currentMethod = form.querySelector('input[value="' + initialMethod + '"]');
-    if (currentMethod) currentMethod.checked = true;
-    if (item && item.amazonQuery) {
-      document.getElementById('registry-back-to-choices').addEventListener('click',function(){renderItemChoices(item);});
+    const form=document.getElementById('registry-contribution-form');
+    const currency=document.getElementById('registry-currency');
+    const amount=document.getElementById('registry-amount');
+    const info=document.getElementById('registry-method-information');
+    const actions=document.getElementById('registry-checkout-actions');
+    const customName=isCustom?document.getElementById('registry-gift-name'):null;
+    function giftPurpose() {return customName?customName.value.trim():item?item.title:'Custom gift';}
+    function validate() {
+      if(customName && (!giftPurpose() || giftPurpose().length>120)) {notify('Enter a gift name or purpose.',true);customName.focus();return false;}
+      const value=Number(amount.value);
+      if(!Number.isFinite(value) || value<=0) {notify('Enter a valid amount.',true);amount.focus();return false;}
+      return true;
     }
-    function updateMethod() {
-      const selectedCurrency = currency.value;
-      const chosenMethod = form.querySelector('input[name="payment-method"]:checked')?.value || 'bank';
-      document.getElementById('registry-amount-symbol').textContent = symbols[selectedCurrency];
-      const acct = getConfiguredBank(selectedCurrency);
-      if (chosenMethod === 'bank') {
-        if (acct) {
-          const rows = [['Account name', acct.accountName],['Bank',acct.bankName],['Account number',acct.accountNumber],
-            ['Sort code',acct.sortCode],['IBAN',acct.iban],['SWIFT/BIC',acct.swift]]
-            .filter(function (row){return typeof row[1] === 'string' && row[1].trim();});
-          methodInfo.innerHTML = '<dl class="registry-bank-details">' +
-            rows.map(function(row){return '<div><dt>' + escapeHTML(row[0]) + '</dt><dd>' + escapeHTML(row[1]) + '</dd></div>';}).join('') + '</dl>' +
-            '<p class="registry-dialog-note">Use your name as the transfer reference and contact us to confirm your gift.</p>';
-          actions.innerHTML = '<button type="button" class="primary" id="registry-copy-bank">Copy bank details</button>';
-          document.getElementById('registry-copy-bank').addEventListener('click',async function () {
-            const giftAmount = Number(amount.value);
-            const details = rows.map(function(row){return row[0]+': '+row[1];}).join('\n') +
-              (Number.isFinite(giftAmount) && giftAmount > 0 ? '\nGift amount: '+symbols[selectedCurrency]+giftAmount+' '+selectedCurrency : '') +
-              '\nGift: ' + (item ? item.title : 'A gift of your choice');
-            try {
-              await navigator.clipboard.writeText(details);
-              notify('Bank details copied.');
-            } catch (_) { notify('Select and copy the displayed bank details.',true); }
-          });
+    function installCopy(id,textFactory,confirmation) {
+      const button=document.getElementById(id);
+      if(!button)return;
+      button.addEventListener('click',async function(){
+        if(!validate())return;
+        try{await navigator.clipboard.writeText(textFactory());notify(confirmation);}
+        catch(_){notify('Please copy the displayed details manually.',true);}
+      });
+    }
+    if(ref) document.getElementById('registry-back-to-choices').addEventListener('click',function(){options(item);});
+    function refreshMethod() {
+      const code=currency.value;
+      const method=form.querySelector('input[name="payment-method"]:checked').value;
+      document.getElementById('registry-amount-symbol').textContent=symbol[code];
+      if(method==='bank') {
+        const acct=bankAccounts[code];
+        if(acct && acct.accountName && acct.bankName && acct.accountNumber) {
+          const rows=[['Account name',acct.accountName],['Bank',acct.bankName],['Account number',acct.accountNumber],['Sort code',acct.sortCode],['IBAN',acct.iban],['SWIFT/BIC',acct.swift]].filter(function(row){return typeof row[1]==='string' && row[1].trim();});
+          info.innerHTML='<dl class="registry-bank-details">'+rows.map(function(row){return '<div><dt>'+escapeHTML(row[0])+'</dt><dd>'+escapeHTML(row[1])+'</dd></div>';}).join('')+'</dl><p class="registry-dialog-note">Please use your name and gift purpose as the transfer reference.</p>';
+          actions.innerHTML='<button class="primary" id="registry-copy-bank" type="button">Copy bank details</button>';
+          installCopy('registry-copy-bank',function(){return rows.map(function(row){return row[0]+': '+row[1];}).join('\n')+'\nAmount: '+symbol[code]+Number(amount.value)+' '+code+'\nGift: '+giftPurpose();},'Bank details copied.');
         } else {
-          methodInfo.innerHTML = '<p class="registry-dialog-note">Bank details for ' + selectedCurrency + ' will be provided once confirmed. Please contact us before transferring.</p>';
-          actions.innerHTML = '<button class="secondary" type="button" id="registry-bank-contact">Contact us</button>';
-          document.getElementById('registry-bank-contact').addEventListener('click',renderContact);
+          info.innerHTML='<p class="registry-dialog-note">Verified '+code+' bank details are not yet available. Please contact us before transferring.</p>';
+          actions.innerHTML='<button class="secondary" id="registry-bank-contact" type="button">Contact us</button>';
+          document.getElementById('registry-bank-contact').addEventListener('click',contact);
+        }
+      } else if(method==='alipay') {
+        const account=cfg.alipayTransfer;
+        const ready=account && typeof account.accountName==='string' && account.accountName.trim() && typeof account.accountId==='string' && account.accountId.trim();
+        if(code!=='CNY') {
+          info.innerHTML='<p class="registry-dialog-note">Alipay transfers are in Chinese yuan. Select ¥ CNY to continue.</p>';
+          actions.innerHTML='';
+        } else if(ready) {
+          info.innerHTML='<dl class="registry-bank-details"><div><dt>Account</dt><dd>'+escapeHTML(account.accountName)+'</dd></div><div><dt>Alipay ID</dt><dd>'+escapeHTML(account.accountId)+'</dd></div></dl>';
+          actions.innerHTML='<button class="primary" id="registry-copy-alipay" type="button">Copy Alipay details</button>';
+          installCopy('registry-copy-alipay',function(){return 'Alipay account: '+account.accountName+'\nAlipay ID: '+account.accountId+'\nAmount: ¥'+Number(amount.value)+' CNY\nGift: '+giftPurpose();},'Alipay details copied.');
+        } else {
+          info.innerHTML='<p class="registry-dialog-note">Alipay receiving details are not yet available. Please contact us before transferring.</p>';
+          actions.innerHTML='<button class="secondary" id="registry-alipay-contact" type="button">Contact us</button>';
+          document.getElementById('registry-alipay-contact').addEventListener('click',contact);
         }
       } else {
-        const ready = Boolean(paymentBase && enabledPayments.includes(chosenMethod));
-        const label = chosenMethod === 'paypal' ? 'PayPal' : 'Stripe';
-        methodInfo.innerHTML = '<p class="registry-dialog-note">' +
-          (ready ? 'You will be directed to ' + label + ' to complete a secure payment.' :
-            label + ' payments are not yet available. You can choose another payment option.') + '</p>';
-        actions.innerHTML = '<button type="submit" class="primary"' + (!ready ? ' disabled' : '') +
-          '>Continue with ' + label + '</button>';
+        const ready=Boolean(paymentBase && enabledPayments.includes(method));
+        const name=method==='paypal'?'PayPal':'Stripe';
+        info.innerHTML='<p class="registry-dialog-note">'+(ready?'Continue to secure '+name+' checkout.':name+' payment is not yet enabled. Please choose another method.')+'</p>';
+        actions.innerHTML='<button class="primary" type="submit"'+(ready?'':' disabled')+'>Continue with '+name+'</button>';
       }
     }
-    currency.addEventListener('change',updateMethod);
-    form.querySelectorAll('input[name="payment-method"]').forEach(function(control) {control.addEventListener('change',updateMethod);});
-    form.addEventListener('submit',async function(event) {
+    currency.addEventListener('change',refreshMethod);
+    form.querySelectorAll('input[name="payment-method"]').forEach(function(radio){radio.addEventListener('change',refreshMethod);});
+    form.addEventListener('submit',async function(event){
       event.preventDefault();
-      const method = form.querySelector('input[name="payment-method"]:checked')?.value;
-      if (!['paypal','stripe'].includes(method) || !paymentBase || !enabledPayments.includes(method)) return;
-      const value = Number(amount.value);
-      if (!Number.isFinite(value) || value <= 0) {notify('Enter a valid gift amount.',true);amount.focus();return;}
-      const button = actions.querySelector('button[type=submit]');
-      if (button) button.disabled = true;
+      const method=form.querySelector('input[name="payment-method"]:checked').value;
+      if(!['paypal','stripe'].includes(method)||!paymentBase||!enabledPayments.includes(method)||!validate())return;
+      const button=actions.querySelector('button[type="submit"]');
+      if(button)button.disabled=true;
       notify('Opening secure checkout…');
-      try {
-        const response = await fetch(paymentBase + '/api/registry/checkout',{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({itemId:item?.id||'open-gift',currency:currency.value,amount:value,paymentMethod:method})
-        });
-        const result = await response.json();
-        const url = new URL(result.checkoutUrl);
-        if (!response.ok || url.protocol !== 'https:') throw new Error('Secure checkout is unavailable.');
-        location.assign(url.href);
-      } catch (_) {
-        notify('Secure checkout is unavailable. Please choose another option.',true);
-        if (button) button.disabled = false;
-      }
+      try{
+        const response=await fetch(paymentBase+'/api/registry/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({itemId:item?item.id:'custom-gift',giftName:giftPurpose(),amount:Number(amount.value),currency:currency.value,paymentMethod:method})});
+        if(!response.ok)throw Error('Payment unavailable.');
+        const data=await response.json();
+        const destination=new URL(data.checkoutUrl);
+        if(destination.protocol!=='https:')throw Error('Invalid checkout URL.');
+        location.assign(destination.href);
+      }catch(_){notify('Secure checkout is not available. Please select another option.',true);if(button)button.disabled=false;}
     });
-    updateMethod();
+    refreshMethod();
   }
-  async function refreshStatuses() {
-    if (!apiBase) return;
-    try {
-      const response = await fetch(apiBase+'/api/registry',{headers:{'Accept':'application/json'},cache:'no-store'});
-      if (!response.ok) return;
-      const payload = await response.json();
-      if (!Array.isArray(payload.items)) return;
-      payload.items.forEach(function(item) {
-        if (item && typeof item.id === 'string' && ['available','reserved','purchased'].includes(item.status))
-          currentStatus[item.id] = item.status;
-      });
-      renderCards();
-    } catch (_) { /* Registry still displays without availability metadata. */ }
+  async function refreshStatuses(){
+    if(!apiBase)return;
+    try{
+      const response=await fetch(apiBase+'/api/registry',{headers:{Accept:'application/json'},cache:'no-store'});
+      if(!response.ok)return;
+      const data=await response.json();
+      if(!Array.isArray(data.items))return;
+      data.items.forEach(function(row){if(row && typeof row.id==='string' && ['reserved','purchased','available'].includes(row.status))status[row.id]=row.status;});
+      render();
+    }catch(_){}
   }
-
-  grid.addEventListener('click',function(event) {
-    const button = event.target.closest('button[data-id]');
-    if (!button) return;
-    const item = items.find(function(value){return value.id === button.dataset.id;});
-    if (item) openModal(item,'item');
+  grid.addEventListener('click',function(event){
+    const button=event.target.closest('button[data-id]');
+    if(!button)return;
+    const item=items.find(function(row){return row.id===button.dataset.id;});
+    if(item)open(item,'item');
   });
-  panel.querySelectorAll('.registry-filter').forEach(function(button) {
-    button.addEventListener('click',function(){activeFilter=button.dataset.filter;renderCards();});
-  });
-  document.getElementById('registry-other-gift').addEventListener('click',function(){openModal(null,'gift');});
-  document.getElementById('registry-bank-transfer').addEventListener('click',function(){openModal(null,'bank');});
-  document.getElementById('registry-contact').addEventListener('click',function(){openModal(null,'contact');});
-  document.getElementById('registry-contact-footer').addEventListener('click',function(){openModal(null,'contact');});
+  panel.querySelectorAll('.registry-filter').forEach(function(button){button.addEventListener('click',function(){activeFilter=button.dataset.filter;render();});});
+  document.getElementById('registry-custom-gift').addEventListener('click',function(){open(null,'custom');});
+  document.getElementById('registry-contact').addEventListener('click',function(){open(null,'contact');});
+  document.getElementById('registry-contact-footer').addEventListener('click',function(){open(null,'contact');});
   document.getElementById('registry-dialog-close').addEventListener('click',function(){dialog.close();});
-  dialog.addEventListener('click',function(event){if(event.target === dialog) dialog.close();});
-
-  renderCards();
-  if (apiBase) {refreshStatuses();setInterval(function(){if(!document.hidden) refreshStatuses();},30000);}
+  dialog.addEventListener('click',function(event){if(event.target===dialog)dialog.close();});
+  render();
+  if(apiBase){refreshStatuses();setInterval(function(){if(!document.hidden)refreshStatuses();},30000);}
 })();
