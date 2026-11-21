@@ -118,7 +118,8 @@ export default {
         if(!textValue(p?.giftId,2,60)||!textValue(p?.giftName,2,120)||
            !textValue(p?.senderName,2,100)||!emailValid(p?.contactEmail)||
            !CURRENCIES.has(p?.currency)||!GIFT_METHODS.has(p?.method)||
-           !amountValid(amount)||!(p?.transferReference===''||p?.transferReference===undefined||textValue(p?.transferReference,1,100)))
+           p?.consent!==true || !amountValid(amount) ||
+           !(p?.transferReference===''||p?.transferReference===undefined||textValue(p?.transferReference,1,100)))
           return response({error:'Check your name, amount and transfer details.'},400,safeHeaders);
         const noticeId=crypto.randomUUID();
         const raw=crypto.getRandomValues(new Uint8Array(32));
@@ -140,9 +141,11 @@ export default {
       const name=form.get('sponsorName'),email=form.get('email');
       const currency=form.get('preferredCurrency'),method=form.get('preferredMethod');
       const fixed=form.get('packageAmountNGN');
+      const transferRef=String(form.get('transferReference')||'').trim();
       const consent=form.get('consent');
       if(!textValue(name,2,120)||!emailValid(email)||!CURRENCIES.has(currency)||
-         !SPONSOR_METHODS.has(method)||fixed!=='10000000'||consent!=='yes')
+         !SPONSOR_METHODS.has(method)||fixed!=='10000000'||consent!=='yes'||
+         (transferRef.length>0&&!textValue(transferRef,1,100)))
         return response({error:'Please check sponsorship contact and package details.'},400,safeHeaders);
       const file=form.get('logo');
       const hasFile=file && typeof file==='object' && typeof file.arrayBuffer==='function' && file.size>0;
@@ -159,8 +162,8 @@ export default {
       }
       try{
         await env.GIVING_DB.prepare(
-          'INSERT INTO sponsor_requests(id,sponsor_name,email,package_amount_ngn,preferred_currency,preferred_method,logo_key,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)'
-        ).bind(id,name.trim(),email.trim(),SPONSOR_AMOUNT_NGN,currency,method,key,'pending',now,now).run();
+          'INSERT INTO sponsor_requests(id,sponsor_name,email,package_amount_ngn,preferred_currency,preferred_method,transfer_reference,logo_key,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
+        ).bind(id,name.trim(),email.trim(),SPONSOR_AMOUNT_NGN,currency,method,transferRef,key,'pending',now,now).run();
       }catch(e){
         if(key)await env.SPONSOR_LOGOS.delete(key);
         throw e;
