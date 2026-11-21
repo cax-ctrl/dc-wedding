@@ -298,3 +298,62 @@
   .registry-alipay-description{align-items:center}
   .registry-alipay-description a{align-self:center}
 }
+
+/* Compact gift gallery and item-specific CTA — preserve existing typography. */
+.registry-status-line{
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  white-space:nowrap;
+  clip-path:inset(50%);
+  margin:0;
+  padding:0;
+  border:0;
+}
+.registry-action-primary{
+  background:transparent;
+  border:1px solid #617854;
+  color:#496447;
+  font-weight:500;
+  cursor:pointer;
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease;
+}
+.registry-action-primary:hover,.registry-action-primary:focus-visible{
+  background:#607752;
+  border-color:#607752;
+  color:#fff;
+}
+.registry-more-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:clamp(14px,2.5vw,24px) auto 0;
+}
+.registry-more-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:168px;
+  min-height:42px;
+  padding:10px 22px;
+  border:1px solid #a8b8a5;
+  border-radius:24px;
+  background:rgba(252,250,246,.8);
+  color:#48654d;
+  font:500 .77rem/1.3 var(--sans);
+  cursor:pointer;
+  transition:background-color .2s ease,border-color .2s ease;
+}
+.registry-more-button:hover,.registry-more-button:focus-visible{
+  background:#e9eee6;
+  border-color:#647e63;
+}
+.registry-more-button[hidden]{display:none!important}
+@media(max-width:550px){
+  .registry-more-row{margin-top:14px}
+  .registry-more-button{min-height:43px;font-size:.75rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .registry-action-primary,.registry-more-button{transition:none}
+}
