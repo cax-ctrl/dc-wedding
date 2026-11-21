@@ -560,15 +560,18 @@
   </div>
 </dialog>
 
-<button type="button" id="wedding-audio-toggle" class="wedding-audio-toggle" aria-label="Mute background music" aria-pressed="true" title="Mute background music" hidden>
-  <span class="wedding-audio-symbol" aria-hidden="true">♫</span>
-  <span class="wedding-audio-caption" aria-hidden="true">Music on</span>
-</button>
-
-<nav class="page-jump-controls" id="page-jump-controls" aria-label="Invitation page navigation" hidden>
+<nav class="page-jump-controls" id="page-jump-controls" aria-label="Page navigation and background music" hidden>
   <button type="button" id="page-jump-up" aria-label="Previous page" title="Previous page">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       <path d="m6 15 6-6 6 6"/>
+    </svg>
+  </button>
+  <button type="button" id="wedding-audio-toggle" class="wedding-audio-toggle" aria-label="Mute background music" aria-pressed="true" title="Mute background music">
+    <svg class="wedding-audio-symbol" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+      <path class="wedding-audio-muted-mark" d="M3 3 21 21"/>
     </svg>
   </button>
   <button type="button" id="page-jump-down" aria-label="Next page" title="Next page">
