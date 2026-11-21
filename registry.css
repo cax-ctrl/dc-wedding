@@ -209,3 +209,8 @@
 .registry-amount-row .registry-amount-input input[type=number]{box-sizing:border-box;display:block;height:100%!important;min-height:0!important;width:100%;padding:0 12px 0 7px;margin:0;line-height:normal;border:0;border-radius:0;outline-offset:-2px}
 .registry-amount-row .registry-currency-field select{display:block;line-height:normal;margin:0;padding-block:0}
 @media(max-width:550px){.registry-give-options{gap:13px;margin-top:18px;padding-top:11px}.registry-give-options button{font-size:.72rem;min-height:33px}.registry-logo-wrap img{padding:16px}}
+
+/* Reserve room for the floating page arrows beside the long gift grid. */
+@media(max-width:900px){
+  .page#registry{padding-right:max(58px,calc(49px + env(safe-area-inset-right)))!important}
+}
