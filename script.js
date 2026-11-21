@@ -20,8 +20,6 @@
     stage.hidden=true;
     const pageControls=document.getElementById('page-jump-controls');
     if(pageControls) pageControls.hidden=false;
-    const musicControl=document.getElementById('wedding-audio-toggle');
-    if(musicControl && (window.AudioContext||window.webkitAudioContext)) musicControl.hidden=false;
     document.getElementById('home').scrollIntoView({block:'start',behavior:'instant'});
   }
   open.addEventListener('click',()=>{
