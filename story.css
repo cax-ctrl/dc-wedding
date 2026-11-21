@@ -1,7 +1,7 @@
 /* Our Story: same section proportions, heading scale and text-link as the invitation. */
 .page#story{
-  background:var(--ivory);
-  color:var(--ink);
+  background:var(--forest);
+  color:#faf9f5;
   overflow-x:hidden;
   overflow-y:auto;
   overscroll-behavior-y:contain;
@@ -25,7 +25,7 @@
   font-size:clamp(3.35rem,6.1vw,5.65rem);
   font-style:normal;
   line-height:.96;
-  color:var(--forest);
+  color:#fffdf7;
   margin:clamp(9px,1.5svh,15px) 0 clamp(8px,1.5svh,15px);
 }
 .story-page .hairline{
@@ -39,7 +39,7 @@
 }
 .story-verse p{
   font:italic 400 clamp(1.2rem,2.15vw,1.56rem)/1.3 var(--serif);
-  color:#445d48;
+  color:#f5f4ee;
 }
 .story-verse cite{
   display:block;
@@ -48,19 +48,19 @@
   font-style:normal;
   text-transform:uppercase;
   letter-spacing:.14em;
-  color:#708470;
+  color:#dce6da;
 }
 .story-narrative{max-width:610px;margin:0 auto}
 .story-narrative p{
   margin:0 auto clamp(9px,1.6svh,16px);
   font:400 clamp(1.25rem,2.35vw,1.69rem)/1.28 var(--serif);
-  color:#303b32;
+  color:#fffaf2;
 }
 .story-final-verse{
   max-width:590px;
   margin:clamp(10px,1.9svh,19px) auto clamp(16px,2.4svh,24px);
   font:italic 400 clamp(1.12rem,1.9vw,1.42rem)/1.3 var(--serif);
-  color:#49664c;
+  color:#f6f1e5;
 }
 .story-final-verse span{
   display:block;
@@ -69,14 +69,14 @@
   font-style:normal;
   letter-spacing:.13em;
   text-transform:uppercase;
-  color:#718674;
+  color:#dce6da;
 }
 .story-gallery{width:min(100%,470px);margin:0 auto}
 .story-gallery-label{
   font:500 .66rem/1.35 var(--sans);
   text-transform:uppercase;
   letter-spacing:.21em;
-  color:#718674;
+  color:#dce6da;
   margin:0 auto clamp(9px,1.4svh,14px);
 }
 .story-thumbnails{
@@ -205,4 +205,26 @@
 }
 @media(prefers-reduced-motion:reduce){
   .story-thumbnail{transition:none}
+}
+
+/* Restore the original photographic story background as a layer below the
+   shorter story and additional thumbnails; keep text legible over the photo. */
+.page#story .page-photo-image{
+  position:absolute;
+  inset:0;
+  z-index:0;
+}
+.page#story .page-photo-image::after{
+  background-position:center center;
+}
+.page#story .page-wash{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:linear-gradient(180deg,rgba(23,41,33,.68),rgba(23,41,33,.7));
+}
+.story-page .story-inner{position:relative;z-index:2}
+.story-page .text-link-light{
+  color:#faf9f5;
+  border-bottom-color:#faf9f5;
 }
