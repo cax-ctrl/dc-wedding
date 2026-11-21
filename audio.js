@@ -1,157 +1,165 @@
 'use strict';
 
 /*
- * Original, self-contained ambient instrumental for Deborah & Caleb.
- * No music recordings, licensed tracks, remote players or third-party audio
- * are loaded. Generated in the listener's browser with Web Audio.
+ * Wedding background music: "Wedding" by leberch (Pixabay Content Licence).
+ * Track: https://pixabay.com/music/wedding-wedding-584474/
+ * Music is loaded from this website's own assets.
  *
- * Starts only when the guest deliberately taps the wax seal, which satisfies
- * the browser's audio-gesture requirement; it can be muted at any time.
+ * First playback requires the guest to tap the envelope seal. A Web Audio
+ * buffer crossfades the final 2.6 seconds into the beginning of the track,
+ * so the same recording repeats without an audible restart or network gap.
+ * The sound continues across sections and mute/unmute changes volume only.
  */
 (function setupWeddingMusic(){
   const button=document.getElementById('wedding-audio-toggle');
   const seal=document.getElementById('open-seal');
   if(!button || !seal)return;
-  const AudioContextClass=window.AudioContext || window.webkitAudioContext;
-  if(!AudioContextClass){ button.hidden=true; return; }
 
-  const tempoSeconds=6;
-  const cycleSeconds=4*tempoSeconds;
-  const chords=[
-    [130.81,164.81,196,293.66],  // Cmaj(add9)
-    [110,130.81,164.81,196],      // Am7
-    [87.31,110,130.81,164.81],   // Fmaj7
-    [98,146.83,196,220]          // Gsus2(add9)
-  ];
-  // Original short, gently varied note pattern; not based on an existing song.
-  const melody=[
-    [329.63,392,440], [392,349.23,329.63],
-    [349.23,329.63,293.66], [293.66,392,329.63]
-  ];
-  let context=null, master=null, clock=0, interval=null, playing=false;
-  let openingUsed=false;
+  const asset='./assets/wedding-by-leberch.mp3';
+  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+  const VOLUME=.47;
+  const CROSSFADE_SECONDS=2.6;
+  let context=null;
+  let master=null;
+  let started=false;
+  let enabled=false;
+  let loading=null;
+  let failed=false;
 
-  function updateUI(){
-    button.setAttribute('aria-pressed',String(playing));
-    button.setAttribute('aria-label',playing?'Mute background music':'Play background music');
-    button.title=playing?'Mute background music':'Play background music';
-    button.querySelector('.wedding-audio-caption').textContent=playing?'Music on':'Music off';
-    button.querySelector('.wedding-audio-symbol').textContent=playing?'♫':'♪';
-    button.classList.toggle('is-muted',!playing);
+  // Fetch while the guest looks at the opening envelope, before audio begins.
+  // The source is same-origin, not streamed from a third-party music provider.
+  const trackDownload=fetch(asset,{cache:'force-cache'}).then(function(response){
+    if(!response.ok)throw new Error('Music file unavailable');
+    return response.arrayBuffer();
+  });
+
+  function showState(){
+    button.classList.toggle('is-muted',!enabled);
+    button.setAttribute('aria-pressed',String(enabled));
+    const label=failed?'Music unavailable':enabled?'Mute background music':'Play background music';
+    button.setAttribute('aria-label',label);
+    button.title=label;
+    button.disabled=failed;
   }
 
-  function voice(frequency,when,length,gainValue,kind){
-    const oscillator=context.createOscillator();
-    const envelope=context.createGain();
-    const filter=context.createBiquadFilter();
-    const start=Math.max(when,context.currentTime+.015);
-    const duration=Math.max(.2,length);
-    const attack=kind==='pad'?.95:.065;
-    const release=kind==='pad'?1.15:1.2;
-    filter.type='lowpass';
-    filter.frequency.value=kind==='pad'?710:1450;
-    oscillator.type=kind==='pad'?'triangle':'sine';
-    oscillator.frequency.value=frequency;
-    envelope.gain.setValueAtTime(0,start);
-    envelope.gain.linearRampToValueAtTime(gainValue,start+attack);
-    if(kind==='pad'){
-      envelope.gain.setValueAtTime(gainValue,start+duration-release);
-    }else{
-      envelope.gain.exponentialRampToValueAtTime(Math.max(.0004,gainValue*.32),start+Math.max(.15,duration-.42));
-    }
-    envelope.gain.linearRampToValueAtTime(0,start+duration);
-    oscillator.connect(filter);
-    filter.connect(envelope);
-    envelope.connect(master);
-    oscillator.start(start);
-    oscillator.stop(start+duration+.08);
-    oscillator.addEventListener('ended',function(){
-      oscillator.disconnect();filter.disconnect();envelope.disconnect();
-    },{once:true});
-  }
-  function phrase(when){
-    for(let chord=0;chord<4;chord++){
-      const start=when+chord*tempoSeconds;
-      chords[chord].forEach((frequency,i)=>{
-        voice(frequency,start,tempoSeconds+.2,i===0?.018:.012,'pad');
-      });
-      const [a,b,c]=melody[chord];
-      voice(a,start+.65,1.85,.032,'melody');
-      voice(b,start+2.3,1.7,.026,'melody');
-      voice(c,start+4.0,1.9,.028,'melody');
-    }
-  }
-  function schedule(){
-    if(!context)return;
-    // Schedule a complete phrase ahead of time; no network or downloaded media.
-    while(clock<context.currentTime+9){
-      phrase(clock);
-      clock+=cycleSeconds;
-    }
-  }
-  function initialise(){
-    if(context)return;
+  function makeContext(){
+    if(context)return context;
     context=new AudioContextClass();
     master=context.createGain();
     master.gain.value=0;
-    const filter=context.createBiquadFilter();
-    filter.type='lowpass';
-    filter.frequency.value=2600;
-    master.connect(filter);
-    filter.connect(context.destination);
-    // Subtle room-like echo created locally, not sampled from recordings.
-    const delay=context.createDelay(.9);
-    delay.delayTime.value=.41;
-    const feedback=context.createGain();
-    feedback.gain.value=.13;
-    const wet=context.createGain();
-    wet.gain.value=.19;
-    filter.connect(delay);
-    delay.connect(wet);
-    wet.connect(context.destination);
-    delay.connect(feedback);
-    feedback.connect(delay);
-    clock=context.currentTime+.08;
-    schedule();
-    interval=window.setInterval(schedule,1800);
+    master.connect(context.destination);
+    return context;
   }
-  async function play(){
+
+  function createSeamlessLoop(original){
+    const channels=original.numberOfChannels;
+    const length=original.length;
+    const rate=original.sampleRate;
+    const overlap=Math.min(Math.floor(length/8),Math.round(rate*CROSSFADE_SECONDS));
+    const loopLength=length-overlap;
+    const directLength=length-2*overlap;
+    if(overlap<=0||directLength<1)throw new Error('Music file too short');
+    const buffer=context.createBuffer(channels,loopLength,rate);
+
+    for(let ch=0;ch<channels;ch++){
+      const source=original.getChannelData(ch);
+      const dest=buffer.getChannelData(ch);
+      // The loop starts after the introductory phrase; the intro plays once.
+      dest.set(source.subarray(overlap,length-overlap),0);
+      for(let i=0;i<overlap;i++){
+        const t=(i+.5)/overlap;
+        const fadeOut=Math.cos(t*Math.PI/2);
+        const fadeIn=Math.sin(t*Math.PI/2);
+        // End of the track and its beginning overlap, blending into the
+        // exact signal at the next loop's first sample.
+        dest[directLength+i]=
+          source[length-overlap+i]*fadeOut+source[i]*fadeIn;
+      }
+    }
+    return {buffer,introSeconds:overlap/rate};
+  }
+
+  function scheduleTrack(original){
+    if(started||!context)return;
+    const prepared=createSeamlessLoop(original);
+    const when=context.currentTime+.06;
+
+    const intro=context.createBufferSource();
+    intro.buffer=original;
+    intro.connect(master);
+    intro.start(when,0,prepared.introSeconds);
+    intro.stop(when+prepared.introSeconds+.005);
+
+    const song=context.createBufferSource();
+    song.buffer=prepared.buffer;
+    song.loop=true;
+    song.connect(master);
+    song.start(when+prepared.introSeconds);
+    started=true;
+  }
+
+  async function startMusic(){
+    if(failed)return;
     try{
-      initialise();
-      await context.resume();
+      // Resume happens during a real tap, before awaiting network/decode.
+      makeContext();
+      const resumed=context.resume();
+      enabled=true;
+      showState();
+      if(!loading){
+        loading=(async function(){
+          const bytes=await trackDownload;
+          const decoded=await context.decodeAudioData(bytes.slice(0));
+          scheduleTrack(decoded);
+        })();
+      }
+      await Promise.all([resumed,loading]);
+      if(!enabled)return;
       master.gain.cancelScheduledValues(context.currentTime);
-      master.gain.setTargetAtTime(.52,context.currentTime,.32);
-      playing=true;
-      updateUI();
+      master.gain.setTargetAtTime(VOLUME,context.currentTime,.34);
     }catch(_){
-      playing=false;updateUI();
+      enabled=false;
+      failed=true;
+      showState();
     }
   }
-  function pause(){
-    if(!context)return;
-    playing=false;
-    updateUI();
+
+  function muteMusic(){
+    enabled=false;
+    showState();
+    if(!context||!master)return;
     master.gain.cancelScheduledValues(context.currentTime);
-    master.gain.setTargetAtTime(0,context.currentTime,.11);
-    window.setTimeout(()=>{
-      if(!playing && context && context.state==='running') context.suspend().catch(()=>{});
-    },380);
+    master.gain.setTargetAtTime(0,context.currentTime,.09);
+    // Deliberately keep the playing buffer running while muted, so unmuting
+    // resumes from the same place instead of restarting the track.
   }
+
+  if(!AudioContextClass){
+    failed=true;
+    showState();
+    return;
+  }
+
   seal.addEventListener('click',function(){
-    if(openingUsed)return;
-    openingUsed=true;
-    // This runs synchronously in the user-initiated envelope opening gesture.
-    void play();
+    void startMusic();
   });
+
   button.addEventListener('click',function(){
-    if(playing)pause();else void play();
+    if(enabled)muteMusic();
+    else void startMusic();
   });
+
   document.addEventListener('visibilitychange',function(){
-    if(document.hidden && playing)pause();
+    if(!context)return;
+    if(document.hidden){
+      context.suspend().catch(()=>{});
+    }else if(enabled){
+      context.resume().catch(()=>{});
+    }
   });
+
   window.addEventListener('pagehide',function(){
-    if(interval)window.clearInterval(interval);
     if(context)context.close().catch(()=>{});
   });
-  updateUI();
+  showState();
 })();
