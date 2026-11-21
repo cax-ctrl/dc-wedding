@@ -130,7 +130,8 @@
     if(!ready){
       const summary='Deborah & Caleb — Sponsorship enquiry\nSponsor: '+name+
         '\nEmail: '+email+'\nPackage: NGN 10,000,000\nPreferred currency: '+sponsorCurrency.value+
-        '\nPreferred method: '+method+'\nLogo: '+(logo?'Selected; please attach separately':'Not supplied')+
+        '\nPreferred method: '+method+'\nReference: '+(document.getElementById('sponsor-transfer-ref').value.trim()||'Not supplied')+
+        '\nLogo: '+(logo?'Selected; please attach separately':'Not supplied')+
         '\nStatus: Enquiry only; not a payment or confirmed sponsorship';
       try{
         await navigator.clipboard.writeText(summary);
@@ -150,6 +151,7 @@
       form.set('packageAmountNGN','10000000');
       form.set('preferredCurrency',sponsorCurrency.value);
       form.set('preferredMethod',method);
+      form.set('transferReference',document.getElementById('sponsor-transfer-ref').value.trim());
       form.set('consent','yes');
       if(logo) form.set('logo',logo,logo.name);
       const response=await fetch(givingBase+'/api/sponsors/request',{method:'POST',body:form,cache:'no-store'});
@@ -184,6 +186,10 @@
   giftForm.addEventListener('submit',async function(event){
     event.preventDefault();
     if(!lastGift || !giftForm.reportValidity())return;
+    if(!document.getElementById('gift-notice-consent').checked){
+      giftMessage.textContent='Please read and accept the gift confirmation notice.';
+      return;
+    }
     const sender=document.getElementById('gift-sender-name').value.trim();
     const email=document.getElementById('gift-sender-contact').value.trim();
     const ref=document.getElementById('gift-transfer-reference').value.trim();
@@ -203,7 +209,7 @@
     try{
       const response=await fetch(givingBase+'/api/gifts/notice',{
         method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',
-        body:JSON.stringify({...lastGift,senderName:sender,contactEmail:email,transferReference:ref})
+        body:JSON.stringify({...lastGift,senderName:sender,contactEmail:email,transferReference:ref,consent:true})
       });
       const payload=await response.json().catch(()=>({}));
       if(!response.ok || payload.accepted!==true)throw Error(payload.error||'Could not send the notice.');
