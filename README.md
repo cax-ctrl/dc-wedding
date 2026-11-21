@@ -17,3 +17,11 @@ This redesign takes structural inspiration from Rainier-PS's full-screen invitat
 - Photography references are temporary Unsplash images already used in the previous design, to be replaced with the couple's own photos. The story is intentionally a placeholder; no personal history has been invented.
 - Wedding gift/payment links will remain inactive until supplied and verified.
 - The layout uses 100svh panels with CSS scroll snapping, with overflow fallback for small heights and reduced-motion settings.
+## Wedding registry
+
+The **Gifts** page now leads into an ivory, sage and champagne **full-screen registry** before the sponsors page. It includes twelve curated funds/gifts, photo cards, filters, Amazon UK browsing references, contribution forms, and reservation statuses. The approved enlarged D&C ivory seal replaces the previous small drawn SVG without changing the opening animation.
+
+- To test reservation and purchased status locally in your browser without making a real booking, add `?registryDemo=1#registry` to the preview URL and open the envelope. This is clearly marked as a preview and uses session-only state.
+- Live shared reservations require deploying the D1-backed Worker in `registry-worker/` and setting `WEDDING_REGISTRY_CONFIG.apiBase` in `registry-config.js`.
+- Payment buttons remain disabled until receiving accounts and a separate verified checkout service are connected. No money is taken and no funding progress is invented.
+- Amazon links lead to **Amazon UK search results**, not approved exact SKUs; the physical delivery location remains undecided.
