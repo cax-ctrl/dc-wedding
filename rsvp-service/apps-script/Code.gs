@@ -25,9 +25,10 @@ function rsvpSafe_(value, maxLength) {
 }
 
 function rsvpBook_() {
-  const book = SpreadsheetApp.getActiveSpreadsheet();
-  if (!book) throw new Error('Install this as a script bound to the private RSVP spreadsheet.');
-  return book;
+  // A web app has no active spreadsheet. Always open the private file by ID.
+  const id = PropertiesService.getScriptProperties().getProperty('RSVP_SHEET_ID');
+  if (!id) throw new Error('Set Script Property RSVP_SHEET_ID to the private spreadsheet ID.');
+  return SpreadsheetApp.openById(id);
 }
 
 function doPost(e) {
