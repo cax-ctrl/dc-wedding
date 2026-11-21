@@ -81,10 +81,12 @@
       ? 'A note about sending a physical gift.' : 'Choose the amount and payment method that suit you.';
     if (mode === 'contact') renderContact();
     else if (item && item.amazonQuery) renderItemChoices(item);
-    else renderTransfer(item, mode === 'bank' ? 'bank' : 'bank');
+    else renderTransfer(item, 'bank');
     if (!dialog.open) dialog.showModal();
   }
   function renderContact() {
+    title.textContent = 'Delivery address';
+    intro.textContent = 'A note about sending a physical gift.';
     const email = String(cfg.contactEmail || '').trim();
     const whatsapp = String(cfg.contactWhatsApp || '').replace(/[^\d]/g,'');
     body.innerHTML =
@@ -157,7 +159,10 @@
             '<p class="registry-dialog-note">Use your name as the transfer reference and contact us to confirm your gift.</p>';
           actions.innerHTML = '<button type="button" class="primary" id="registry-copy-bank">Copy bank details</button>';
           document.getElementById('registry-copy-bank').addEventListener('click',async function () {
-            const details=rows.map(function(row){return row[0]+': '+row[1];}).join('\n');
+            const giftAmount = Number(amount.value);
+            const details = rows.map(function(row){return row[0]+': '+row[1];}).join('\n') +
+              (Number.isFinite(giftAmount) && giftAmount > 0 ? '\nGift amount: '+symbols[selectedCurrency]+giftAmount+' '+selectedCurrency : '') +
+              '\nGift: ' + (item ? item.title : 'A gift of your choice');
             try {
               await navigator.clipboard.writeText(details);
               notify('Bank details copied.');
