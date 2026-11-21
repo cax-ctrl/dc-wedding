@@ -1,0 +1,31 @@
+# Copy to wrangler.toml after creating the database and private R2 bucket.
+# Do not commit real secrets.
+name = "dc-wedding-giving"
+main = "src/index.js"
+compatibility_date = "2026-11-22"
+
+[vars]
+ALLOWED_ORIGINS = "https://cax-ctrl.github.io"
+
+[[d1_databases]]
+binding = "GIVING_DB"
+database_name = "dc-wedding-giving"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "SPONSOR_LOGOS"
+bucket_name = "dc-wedding-sponsor-logos"
+
+[[ratelimits]]
+name = "IP_LIMITER"
+namespace_id = "33001"
+  [ratelimits.simple]
+  limit = 4
+  period = 60
+
+[[ratelimits]]
+name = "GLOBAL_LIMITER"
+namespace_id = "33002"
+  [ratelimits.simple]
+  limit = 100
+  period = 60
