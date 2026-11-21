@@ -159,7 +159,14 @@
   });
 
   window.addEventListener('pagehide',function(){
-    if(context)context.close().catch(()=>{});
+    const ending=context;
+    context=null;
+    master=null;
+    started=false;
+    loading=null;
+    enabled=false;
+    if(ending)ending.close().catch(()=>{});
+    showState();
   });
   showState();
 })();
