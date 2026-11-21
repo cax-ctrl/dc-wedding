@@ -25,9 +25,9 @@
     running=true;
     if(reduceMotion){finish();return;}
     stage.classList.add('is-unsealing');
-    window.setTimeout(()=>stage.classList.add('is-lifting'),160);
-    window.setTimeout(()=>stage.classList.add('is-parting'),810);
-    window.setTimeout(()=>stage.classList.add('is-revealing'),1680);
-    window.setTimeout(finish,2160);
+    window.setTimeout(()=>stage.classList.add('is-lifting'),430);
+    window.setTimeout(()=>stage.classList.add('is-parting'),1100);
+    window.setTimeout(()=>stage.classList.add('is-revealing'),2000);
+    window.setTimeout(finish,2660);
   });
 })();
