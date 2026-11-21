@@ -142,5 +142,5 @@
 }
 .wax-stamp-image{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
 @media(max-width:600px){
-  .envelope-seal{width:clamp(116px,33vw,152px);height:clamp(116px,33vw,152px)}
+  .envelope-seal{width:clamp(134px,37vw,168px);height:clamp(134px,37vw,168px)}
 }
