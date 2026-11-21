@@ -326,6 +326,96 @@
   </footer>
 </main>
 
+<dialog id="sponsor-dialog" class="giving-dialog" aria-labelledby="sponsor-dialog-heading">
+  <div class="giving-dialog-inner">
+    <header class="giving-dialog-header">
+      <p>DEBORAH &amp; CALEB · SPONSORSHIP</p>
+      <button type="button" class="giving-close" data-close-giving aria-label="Close sponsorship form">×</button>
+    </header>
+    <h2 id="sponsor-dialog-heading">Become a sponsor</h2>
+    <p class="giving-subtitle">Support our celebration and become a part of our story.</p>
+    <p class="sponsor-price">₦10,000,000 <span>Wedding sponsorship</span></p>
+    <form id="sponsor-form" class="giving-form">
+      <label class="giving-field" for="sponsor-name">Sponsor name
+        <input type="text" id="sponsor-name" name="sponsorName" maxlength="120" autocomplete="organization" placeholder="Your name or organisation" required>
+      </label>
+      <label class="giving-field" for="sponsor-email">Contact email
+        <input type="email" id="sponsor-email" name="email" maxlength="160" autocomplete="email" placeholder="For approval and confirmation" required>
+      </label>
+      <label class="giving-field" for="sponsor-logo">Image or logo <small>(optional · PNG, JPG or WebP · max 2 MB)</small>
+        <input type="file" id="sponsor-logo" name="logo" accept="image/png,image/jpeg,image/webp">
+      </label>
+      <div class="sponsor-logo-preview" id="sponsor-logo-preview" hidden>
+        <img id="sponsor-logo-image" alt="Sponsor logo preview">
+        <button type="button" id="sponsor-remove-logo">Remove image</button>
+      </div>
+      <label class="giving-field" for="sponsor-currency">Payment currency
+        <select id="sponsor-currency">
+          <option value="NGN">₦ NGN · Fixed sponsorship fee</option>
+          <option value="GBP">£ GBP · Ask for equivalent</option>
+          <option value="USD">$ USD · Ask for equivalent</option>
+          <option value="EUR">€ EUR · Ask for equivalent</option>
+          <option value="CNY">¥ CNY · Ask for equivalent</option>
+        </select>
+      </label>
+      <fieldset class="giving-methods">
+        <legend>Payment option</legend>
+        <label><input type="radio" name="sponsorMethod" value="bank" checked> Bank transfer</label>
+        <label><input type="radio" name="sponsorMethod" value="paypal"> PayPal</label>
+        <label><input type="radio" name="sponsorMethod" value="stripe"> Stripe</label>
+        <label><input type="radio" name="sponsorMethod" value="alipay"> Alipay</label>
+      </fieldset>
+      <div class="giving-payment-info" id="sponsor-payment-info" aria-live="polite"></div>
+      <label class="giving-consent" for="sponsor-consent">
+        <input type="checkbox" id="sponsor-consent" required>
+        <span>I understand that sponsorship and logo placement require organiser approval and payment verification.</span>
+      </label>
+      <p class="giving-message" id="sponsor-message" role="status" aria-live="polite"></p>
+      <button type="submit" class="giving-submit" id="sponsor-submit">Prepare sponsorship request</button>
+      <p class="giving-help" id="sponsor-status-note"></p>
+    </form>
+    <div class="giving-result" id="sponsor-result" hidden tabindex="-1">
+      <h3>Sponsorship request received</h3>
+      <p>Thank you. Your request is awaiting approval and payment verification. This is not a payment receipt.</p>
+      <p id="sponsor-result-reference"></p>
+      <button type="button" data-close-giving>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="gift-notice-dialog" class="giving-dialog" aria-labelledby="gift-notice-heading">
+  <div class="giving-dialog-inner">
+    <header class="giving-dialog-header">
+      <p>DEBORAH &amp; CALEB · GIFT REGISTRY</p>
+      <button type="button" class="giving-close" data-close-giving aria-label="Close gift notice">×</button>
+    </header>
+    <h2 id="gift-notice-heading">Let us know</h2>
+    <p class="giving-subtitle">Sent a transfer? Share its details so we can match it to your gift.</p>
+    <form id="gift-notice-form" class="giving-form">
+      <p id="gift-notice-selection" class="giving-summary"></p>
+      <label class="giving-field" for="gift-sender-name">Your name
+        <input id="gift-sender-name" name="senderName" type="text" maxlength="100" autocomplete="name" placeholder="Name used for the gift" required>
+      </label>
+      <label class="giving-field" for="gift-sender-contact">Email address
+        <input id="gift-sender-contact" name="contact" type="email" autocomplete="email" maxlength="160" placeholder="For status updates" required>
+      </label>
+      <label class="giving-field" for="gift-transfer-reference">Transfer reference <small>(optional)</small>
+        <input id="gift-transfer-reference" name="transferReference" type="text" maxlength="100" placeholder="Reference shown by your bank">
+      </label>
+      <p class="giving-help">We will verify receipt of funds before marking this gift as recorded. Do not share banking passwords or PINs.</p>
+      <p class="giving-message" id="gift-notice-message" role="status" aria-live="polite"></p>
+      <button type="submit" id="gift-notice-submit" class="giving-submit">Prepare gift notice</button>
+    </form>
+    <div class="giving-result" id="gift-notice-result" hidden tabindex="-1">
+      <h3 id="gift-notice-result-heading">Gift notice received</h3>
+      <p id="gift-notice-result-description">Your reported transfer is awaiting verification.</p>
+      <p id="gift-notice-result-reference"></p>
+      <button type="button" id="gift-status-refresh" hidden>Check verification status</button>
+      <button type="button" data-close-giving>Close</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog class="legal-dialog" id="website-legal-dialog" aria-label="Wedding website privacy and legal information">
   <div class="legal-dialog-inner">
     <div class="legal-dialog-header">
