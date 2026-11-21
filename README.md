@@ -19,9 +19,12 @@ This redesign takes structural inspiration from Rainier-PS's full-screen invitat
 - The layout uses 100svh panels with CSS scroll snapping, with overflow fallback for small heights and reduced-motion settings.
 ## Wedding registry
 
-The **Gifts** page now leads into an ivory, sage and champagne **full-screen registry** before the sponsors page. It includes twelve curated funds/gifts, photo cards, filters, Amazon UK browsing references, contribution forms, and reservation statuses. The approved enlarged D&C ivory seal replaces the previous small drawn SVG without changing the opening animation.
+The Gifts page links to the registry through one **Wishlist ↓** link, followed by a single **With thanks ↓** link to the sponsors page. The Story, Colours and RSVP pages now also have explicit next-page links. The registry uses the invitation's non-italic typography and restrained ivory/sage/champagne palette.
 
-- To test reservation and purchased status locally in your browser without making a real booking, add `?registryDemo=1#registry` to the preview URL and open the envelope. This is clearly marked as a preview and uses session-only state.
-- Live shared reservations require deploying the D1-backed Worker in `registry-worker/` and setting `WEDDING_REGISTRY_CONFIG.apiBase` in `registry-config.js`.
-- Payment buttons remain disabled until receiving accounts and a separate verified checkout service are connected. No money is taken and no funding progress is invented.
-- Amazon links lead to **Amazon UK search results**, not approved exact SKUs; the physical delivery location remains undecided.
+All 12 gift cards have **one Contribute button**. For five physical gift ideas, the pop-up offers **Browse Amazon** (Amazon UK search in a new tab) or **Transfer** (same-page pop-up). For the seven flexible gifts, Contribute goes directly to the transfer selection. Guests can choose USD, GBP or NGN, enter any amount, and choose Bank transfer, PayPal or Stripe. Gift prices and funding progress are not invented.
+
+**Receiving accounts and payments are not yet connected.** The public `registry-config.js` has empty bank, contact and checkout settings. Bank details only appear after verified account data is configured. PayPal and Stripe buttons only enable after a secured checkout service and corresponding method have been configured. The registry includes a contact-for-delivery action; until an approved wedding contact is provided, it directs guests to the person who shared their invitation.
+
+Shared gift status badges, when available, can be read from the separately hosted Worker service in `registry-worker/`. The previous browser-only reservation demonstration and multiple actions on individual cards have been removed from the guest interface. Amazon shopping actions do not themselves reserve or confirm purchases. The Worker is not deployed or connected by this frontend change.
+
+The enlarged approved ivory D&C seal and envelope animation remain in place. The sponsors page and other invitation content remain otherwise intact.
