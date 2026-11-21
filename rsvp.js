@@ -63,9 +63,12 @@
   }
   if (ready()) {
     submit.disabled = false;
-    serviceNote.textContent = 'Submitting a request does not confirm a seat. Only a personal message with an invitation code confirms admission.';
+    // Once the live intake is connected, remove the temporary opening notice.
+    serviceNote.hidden = true;
+    serviceNote.textContent = '';
   } else {
     submit.disabled = true;
+    serviceNote.hidden = false;
     serviceNote.textContent = 'RSVP requests are not open yet. Please check back soon.';
   }
   updateCountry();
