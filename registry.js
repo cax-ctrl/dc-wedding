@@ -168,16 +168,15 @@
       button.textContent='I have sent a transfer →';
       button.addEventListener('click',function(){
         if(!validate())return;
-        document.dispatchEvent(new CustomEvent('dc:gift-transfer-notice',{
-          detail:{
-            giftId:item?item.id:'custom-gift',
-            giftName:giftPurpose(),
-            amount:Number(amount.value),
-            currency:currency.value,
-            method:form.querySelector('input[name="payment-method"]:checked')?.value||'bank'
-          }
-        }));
+        const notice={
+          giftId:item?item.id:'custom-gift',
+          giftName:giftPurpose(),
+          amount:Number(amount.value),
+          currency:currency.value,
+          method:form.querySelector('input[name="payment-method"]:checked')?.value||'bank'
+        };
         dialog.close();
+        document.dispatchEvent(new CustomEvent('dc:gift-transfer-notice',{detail:notice}));
       });
       actions.appendChild(button);
     }
