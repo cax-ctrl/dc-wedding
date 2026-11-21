@@ -1,11 +1,12 @@
 /* Invitation legal information: minimal footer links and an unobtrusive document panel. */
 .sponsor-bottom-links{
   display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
-  flex-wrap:wrap;
-  gap:6px clamp(9px,1.2vw,17px);
-  margin:17px auto 0;
+  flex-wrap:nowrap;
+  gap:2px;
+  margin:13px auto 0;
   width:100%;
   flex-shrink:0;
 }
@@ -116,7 +117,7 @@
 .legal-panel .legal-review-note{font-size:.72rem;color:#79867a;margin-bottom:10px}
 .legal-panel section+section{margin-top:12px}
 @media(max-width:600px){
-  .sponsor-bottom-links{margin-top:10px;gap:0 12px}
+  .sponsor-bottom-links{margin-top:8px;gap:2px}
   .sponsor-bottom-links .sponsor-back,.sponsor-bottom-links button{font-size:.66rem;padding:6px 0}
   .sponsor-bottom-divider{display:none}
   .legal-tabs{gap:12px;justify-content:space-between}
