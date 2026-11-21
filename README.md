@@ -12,8 +12,10 @@ This redesign takes structural inspiration from Rainier-PS's full-screen invitat
 
 ## Technical notes
 
-- GitHub Pages only hosts the static website. It **does not receive or save RSVPs**.
-- Public `/rsvp-config.js` intentionally leaves `WEDDING_RSVP_API_BASE_URL` blank. Only configure once you deploy and secure the separate RSVP API and approved guest database. Never commit guest data, payment credentials, API secrets or invitation-code lists.
+- GitHub Pages hosts the invitation and international RSVP request form, but **does not itself save guest details**.
+- The private Google Sheets guest-management workbook has been created. A Cloudflare Worker and Google Apps Script bridge are implemented in `rsvp-service/` but must be deployed and verified before guest submissions are enabled.
+- Public `/rsvp-config.js` leaves `WEDDING_RSVP_CONFIG.apiBase` blank until the server-side service is ready. Do not commit guest details, Apps Script URLs, credentials, or invitation-code lists.
+- Anyone with the link may **request** an invitation; only personally confirmed guests sent a unique code have a place. No automatic approval or messaging occurs.
 - Photography references are temporary Unsplash images already used in the previous design, to be replaced with the couple's own photos. The story is intentionally a placeholder; no personal history has been invented.
 - Wedding gift/payment links will remain inactive until supplied and verified.
 - The layout uses 100svh panels with CSS scroll snapping, with overflow fallback for small heights and reduced-motion settings.
@@ -28,3 +30,7 @@ Every card has **Contribute**. Cards with a vendor reference open that vendor or
 No unverified bank, Alipay, PayPal or Stripe account is displayed; all receiving details are blank in `registry-config.js`. The site does not yet accept or verify payments. The proposed maternal/newborn care fund is not represented as an established charity or tax-deductible scheme: confirm the programme, legal beneficiary, consent, accounting and disbursement terms before collecting donations. Amazon browse links are generic searches; SourceAxis pricing describes sourcing assessments, not a consumer product catalogue. CP Biomed's catalogue contains specialist reproductive-health/laboratory equipment. HubX is a service reference and not a retail checkout.
 
 The private delivery address is not published; the contact option directs guests to the person who shared their invitation until an approved wedding contact is configured. Gift status labels require a separately hosted backend (not connected). Existing RSVP security conditions continue to apply.
+
+## Private RSVP manager
+
+Organiser Google Sheet: https://docs.google.com/spreadsheets/d/1cZ2IelToxKsCgEpwf3ANswE44nAqq_0PmoXBNDfsMUM/edit (restricted access). See [rsvp-service/README.md](rsvp-service/README.md) for deployment and approval instructions, country-specific validation, message channels, invitation-code issuance, and entrance check-in.
