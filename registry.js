@@ -34,7 +34,7 @@
   const modalIntro = document.getElementById('registry-dialog-intro');
   const modalBody = document.getElementById('registry-dialog-body');
   const modalMessage = document.getElementById('registry-dialog-message');
-  const symbol = {USD:'$',GBP:'£',NGN:'₦',CNY:'¥'};
+  const symbol = {USD:'$',GBP:'£',NGN:'₦',EUR:'€',CNY:'¥'};
 
   function escapeHTML(value) {
     return String(value).replace(/[&<>"']/g, function(char) {
@@ -125,7 +125,7 @@
       '<div class="registry-form-heading"><span class="registry-step-label">Gift amount</span>'+
       (ref?'<button class="registry-inline-link" type="button" id="registry-back-to-choices">← Gift options</button>':'')+'</div>'+
       '<div class="registry-amount-row">'+
-      '<label class="registry-field registry-currency-field" for="registry-currency"><span>Currency</span><select id="registry-currency" name="currency"><option value="USD">$ USD</option><option value="GBP">£ GBP</option><option value="NGN">₦ NGN</option><option value="CNY">¥ CNY</option></select></label>'+
+      '<label class="registry-field registry-currency-field" for="registry-currency"><span>Currency</span><select id="registry-currency" name="currency"><option value="USD">$ USD</option><option value="GBP">£ GBP</option><option value="NGN">₦ NGN</option><option value="EUR">€ EUR</option><option value="CNY">¥ CNY</option></select></label>'+
       '<label class="registry-field registry-value-field" for="registry-amount"><span>Amount</span><span class="registry-amount-input"><span id="registry-amount-symbol" aria-hidden="true">$</span><input id="registry-amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal" autocomplete="off" required></span></label>'+
       '</div>'+
       '<fieldset class="registry-methods"><legend class="registry-step-label">Payment option</legend>'+
@@ -166,26 +166,26 @@
       document.getElementById('registry-amount-symbol').textContent=symbol[code];
       if(method==='bank') {
         const acct=bankAccounts[code];
-        if(acct && acct.accountName && acct.bankName && acct.accountNumber) {
-          const rows=[['Account name',acct.accountName],['Bank',acct.bankName],['Account number',acct.accountNumber],['Sort code',acct.sortCode],['IBAN',acct.iban],['SWIFT/BIC',acct.swift]].filter(function(row){return typeof row[1]==='string' && row[1].trim();});
-          info.innerHTML='<dl class="registry-bank-details">'+rows.map(function(row){return '<div><dt>'+escapeHTML(row[0])+'</dt><dd>'+escapeHTML(row[1])+'</dd></div>';}).join('')+'</dl><p class="registry-dialog-note">Please use your name and gift purpose as the transfer reference.</p>';
+        if(acct && acct.accountName && Array.isArray(acct.domestic) && acct.domestic.length) {
+          const rows=[['Account name',acct.accountName]].concat(acct.domestic.map(function(row){return [(acct.domesticLabel||'Domestic')+' · '+row[0],row[1]];}),Array.isArray(acct.international)?acct.international.map(function(row){return [(acct.internationalLabel||'International')+' · '+row[0],row[1]];}):[]).filter(function(row){return typeof row[1]==='string' && row[1].trim();});
+          info.innerHTML='<dl class="registry-bank-details">'+rows.map(function(row){return '<div><dt>'+escapeHTML(row[0])+'</dt><dd>'+escapeHTML(row[1])+'</dd></div>';}).join('')+'</dl><p class="registry-dialog-note">Choose the relevant domestic or international instructions and verify the recipient with your bank. Transfers are not automatically confirmed.</p>';
           actions.innerHTML='<button class="primary" id="registry-copy-bank" type="button">Copy bank details</button>';
           installCopy('registry-copy-bank',function(){return rows.map(function(row){return row[0]+': '+row[1];}).join('\n')+'\nAmount: '+symbol[code]+Number(amount.value)+' '+code+'\nGift: '+giftPurpose();},'Bank details copied.');
         } else {
-          info.innerHTML='<p class="registry-dialog-note">Verified '+code+' bank details are not yet available. Please contact us before transferring.</p>';
+          info.innerHTML='<p class="registry-dialog-note">No bank details are shown for '+code+'. For CNY, please choose Alipay transfer.</p>';
           actions.innerHTML='<button class="secondary" id="registry-bank-contact" type="button">Contact us</button>';
           document.getElementById('registry-bank-contact').addEventListener('click',function(){contact('payment');});
         }
       } else if(method==='alipay') {
         const account=cfg.alipayTransfer;
-        const ready=account && typeof account.accountName==='string' && account.accountName.trim() && typeof account.accountId==='string' && account.accountId.trim();
+        const ready=account && /^\d{8,15}$/.test(String(account.phone||'')) && account.qrPath==='./assets/dc-alipay-qr.svg';
         if(code!=='CNY') {
           info.innerHTML='<p class="registry-dialog-note">Alipay transfers are in Chinese yuan. Select ¥ CNY to continue.</p>';
           actions.innerHTML='';
         } else if(ready) {
-          info.innerHTML='<dl class="registry-bank-details"><div><dt>Account</dt><dd>'+escapeHTML(account.accountName)+'</dd></div><div><dt>Alipay ID</dt><dd>'+escapeHTML(account.accountId)+'</dd></div></dl>';
+          info.innerHTML='<div class="registry-alipay-panel"><img class="registry-alipay-qr" src="./assets/dc-alipay-qr.svg" width="208" height="208" alt="Alipay payment QR code"><div class="registry-alipay-description"><strong>Scan with Alipay</strong><span>'+escapeHTML(account.recipientLabel||'Recipient provided by the couple')+'</span><span>Alipay number: <strong>'+escapeHTML(account.phone)+'</strong></span><a href="'+escapeHTML(account.qrUrl)+'" target="_blank" rel="noopener noreferrer">Open payment link ↗</a></div></div><p class="registry-dialog-note">Enter the selected amount and confirm the recipient shown by Alipay before sending. This personal QR is not a HubX Limited business bank account. Transfers are not automatically confirmed.</p>';
           actions.innerHTML='<button class="primary" id="registry-copy-alipay" type="button">Copy Alipay details</button>';
-          installCopy('registry-copy-alipay',function(){return 'Alipay account: '+account.accountName+'\nAlipay ID: '+account.accountId+'\nAmount: ¥'+Number(amount.value)+' CNY\nGift: '+giftPurpose();},'Alipay details copied.');
+          installCopy('registry-copy-alipay',function(){return 'Alipay number: '+account.phone+'\nPayment link: '+account.qrUrl+'\nAmount: ¥'+Number(amount.value)+' CNY\nGift: '+giftPurpose();},'Alipay details copied.');
         } else {
           info.innerHTML='<p class="registry-dialog-note">Alipay receiving details are not yet available. Please contact us before transferring.</p>';
           actions.innerHTML='<button class="secondary" id="registry-alipay-contact" type="button">Contact us</button>';
@@ -198,7 +198,7 @@
         actions.innerHTML='<button class="primary" type="submit"'+(ready?'':' disabled')+'>Continue with '+name+'</button>';
       }
     }
-    currency.addEventListener('change',refreshMethod);
+    currency.addEventListener('change',function(){if(currency.value==='CNY' && form.querySelector('input[name="payment-method"]:checked')?.value==='bank') form.querySelector('input[value="alipay"]').checked=true; else if(currency.value!=='CNY' && form.querySelector('input[name="payment-method"]:checked')?.value==='alipay') form.querySelector('input[value="bank"]').checked=true; refreshMethod();});
     form.querySelectorAll('input[name="payment-method"]').forEach(function(radio){radio.addEventListener('change',refreshMethod);});
     form.addEventListener('submit',async function(event){
       event.preventDefault();
