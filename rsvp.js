@@ -48,8 +48,9 @@
     if (intl) {
       if (!digits.startsWith(prefixValue)) throw new Error('Your mobile country code does not match your selected country.');
       digits = digits.slice(prefixValue.length);
-    } else if (countryCode === 'US' && digits.length === 11 && digits.startsWith('1')) {
-      digits = digits.slice(1);
+    } else if (digits.startsWith(prefixValue) && !mobileRules[countryCode].test(digits)) {
+      // Accept pasted international numbers even if the leading + was omitted.
+      digits = digits.slice(prefixValue.length);
     }
     if (countryCode !== 'US' && digits.startsWith('0')) digits = digits.slice(1);
     if (!mobileRules[countryCode].test(digits)) {
