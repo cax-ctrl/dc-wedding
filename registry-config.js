@@ -4,6 +4,7 @@
 window.WEDDING_REGISTRY_CONFIG = {
   apiBase: '',
   paymentApiBase: '',
+  givingApiBase: '', // Private payment notices and sponsorship requests, when deployed
   enabledPaymentMethods: [], // Online PayPal/Stripe checkout remains inactive.
   bankAccounts: {
     EUR: {
