@@ -128,3 +128,19 @@
 .designer-credit{margin-top:clamp(18px,4svh,38px)}
 .powered-block{margin-top:auto;padding-top:clamp(38px,7.3svh,84px)}
 @media(max-height:740px){.sponsor-inner{height:auto;min-height:100%}.powered-block{margin-top:clamp(17px,3svh,32px);padding-top:0}}
+
+
+/* Approved D&C ivory wax seal — prominent and legible across breakpoints. */
+.envelope-seal{
+  width:clamp(136px,14vw,188px);
+  height:clamp(136px,14vw,188px);
+  overflow:visible;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  filter:drop-shadow(0 9px 12px rgba(34,50,37,.3));
+}
+.wax-stamp-image{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}
+@media(max-width:600px){
+  .envelope-seal{width:clamp(116px,33vw,152px);height:clamp(116px,33vw,152px)}
+}
