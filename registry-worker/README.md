@@ -3,7 +3,7 @@
 The invitation frontend is static GitHub Pages. Its interactive registry requires a separate Cloudflare Worker with D1 for real, shared reservation states.
 
 ## Setup
-1. Create a D1 database using Cloudflare. Apply `schema.sql` to initialise the five physical gift rows.
+1. Create a D1 database using Cloudflare. Apply `schema.sql` to initialise the six physical gift rows.
 2. Create a Cloudflare Worker from `src/index.js` and bind the database as `REGISTRY_DB`.
 3. Configure Worker variable `ALLOWED_ORIGINS` to the exact invitation origin(s), for example `https://cax-ctrl.github.io`. Do not include the URL path.
 4. Add `REGISTRY_ADMIN_TOKEN` as a **Worker secret**, not in GitHub or in the browser.
@@ -22,4 +22,4 @@ The checkout endpoint deliberately returns 503. Connecting Paystack, Stripe or P
 - Verify image licences, selected Amazon listings, receiving currencies and legal/privacy wording.
 - Test with keyboard, small-screen Safari and real payment sandboxes before switching live.
 
-Current physical gifts include Cars (replacing Kindle). The public site displays one Contribute button per gift and does not take reservations. The D1 database remains optional for future admin-managed gift status. A scannable Alipay QR and public transfer instructions are now available on the website for manual payments; they do not create any automatic payment confirmation. Gift and donation accounting, beneficiary verification and the proposed maternal/newborn-care programme still require organiser controls.
+The car item is a fund with a Contribute action. Six physical items use Gift this and allow exploring an appropriate gift or its monetary equivalent. The public site does not currently take reservations. The D1 database remains optional for future admin-managed gift status. A scannable Alipay QR and public transfer instructions are now available on the website for manual payments; they do not create any automatic payment confirmation. Gift and donation accounting, beneficiary verification and the proposed maternal/newborn-care programme still require organiser controls.
