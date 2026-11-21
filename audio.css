@@ -1,0 +1,65 @@
+/* Optional original wedding ambience: small, unobtrusive player. */
+.wedding-audio-toggle{
+  position:fixed;
+  z-index:82;
+  left:max(11px,env(safe-area-inset-left));
+  bottom:calc(15px + env(safe-area-inset-bottom));
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:44px;
+  min-width:106px;
+  padding:8px 13px;
+  border:1px solid rgba(82,105,84,.26);
+  border-radius:25px;
+  background:rgba(248,246,239,.85);
+  color:#354e3e;
+  box-shadow:0 2px 8px rgba(32,45,34,.09);
+  font:500 .72rem/1.25 var(--sans);
+  letter-spacing:.02em;
+  -webkit-backdrop-filter:blur(4px);
+  backdrop-filter:blur(4px);
+}
+.wedding-audio-toggle[hidden]{display:none!important}
+.wedding-audio-toggle:hover,.wedding-audio-toggle:focus-visible{
+  background:rgba(248,246,239,.98);
+  border-color:#738c77;
+}
+.wedding-audio-toggle.is-muted{opacity:.67}
+.wedding-audio-symbol{font:500 1.24rem/1 var(--serif)}
+body:has(dialog[open]) .wedding-audio-toggle{opacity:0;pointer-events:none}
+.story-hashtag{
+  margin:clamp(12px,1.8svh,19px) auto 0;
+  font:500 .7rem/1.35 var(--sans);
+  color:#f1eee2;
+  letter-spacing:.1em;
+}
+.story-page .text-link{margin-top:clamp(10px,1.5svh,16px)}
+/* Keep the final page vertically centred, like the other invitation pages.
+   The page itself scrolls if the content is taller than the device screen. */
+.sponsor-page{overflow-y:auto;overscroll-behavior-y:contain}
+.sponsor-page .sponsor-inner{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  height:auto;
+  min-height:0;
+  margin:auto;
+  padding-top:clamp(18px,3.5svh,42px);
+  padding-bottom:clamp(18px,3.5svh,42px);
+}
+@media(max-width:600px){
+  .wedding-audio-toggle{
+    left:max(8px,env(safe-area-inset-left));
+    bottom:calc(10px + env(safe-area-inset-bottom));
+    min-width:93px;
+    padding:7px 11px;
+    font-size:.68rem;
+  }
+  .story-hashtag{font-size:.66rem}
+  .sponsor-page .sponsor-inner{padding-top:clamp(10px,2svh,20px);padding-bottom:clamp(13px,2.2svh,23px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .wedding-audio-toggle{transition:none}
+}
