@@ -3,24 +3,25 @@
 (function () {
   const panel = document.getElementById('registry');
   const grid = document.getElementById('registry-grid');
+  const moreButton = document.getElementById('registry-show-more');
   const dialog = document.getElementById('registry-dialog');
-  if (!panel || !grid || !dialog) return;
+  if (!panel || !grid || !dialog || !moreButton) return;
   const items = [
-    {id:'first-home',title:'Our First Home Fund',kind:'fund',group:'home',description:'Help us create a home together, wherever our journey takes us.',image:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=82'},
-    {id:'honeymoon',title:'Honeymoon Experiences',kind:'fund',group:'travel',description:'A contribution towards memorable experiences on our honeymoon.',image:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=82'},
-    {id:'flights',title:'Flights & Future Adventures',kind:'fund',group:'travel',description:'Support the travels and new experiences we will share.',image:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=82'},
-    {id:'date-nights',title:'Date Nights for Two',kind:'fund',group:'travel',description:'Help us make time for special evenings and shared memories.',image:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=82'},
-    {id:'home-decor',title:'Home Furnishings & Décor',kind:'fund',group:'home',description:'Thoughtful pieces to make wherever we settle warm and welcoming.',image:'https://images.unsplash.com/photo-1767963758785-b9def36c13e3?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'SourceAxis publishes sourcing assessment fees and quotes project services separately; this is not a retail product catalogue.'},
-    {id:'kitchen',title:'Our Kitchen Essentials',kind:'fund',group:'home',description:'Everyday essentials for meals and moments around our table.',image:'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'Explore sourcing assessment and pricing, rather than an immediate product purchase.'},
-    {id:'memories',title:'Wedding Memories & Photo Album',kind:'fund',group:'home',description:'A beautiful way to preserve the story of our wedding.',image:'https://images.unsplash.com/photo-1677658288237-2fff291a34f0?auto=format&fit=crop&w=800&q=82'},
-    {id:'luggage',title:'Matching Travel Luggage',kind:'physical',group:'travel',description:'A durable luggage set for the many adventures ahead.',image:'https://images.unsplash.com/photo-1740470077240-e0ff892c21a5?auto=format&fit=crop&w=800&q=82',amazonQuery:'matching carry on luggage suitcase set'},
-    {id:'cars',title:'A Car for Our Next Chapter',kind:'physical',group:'travel',description:'A contribution towards a vehicle for the road ahead.',image:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://jovicoworld.com/cars',referenceLabel:'Browse Cars',referenceNote:'Explore available cars and pre-orders with Jovico; prices and delivery arrangements depend on the chosen vehicle.'},
-    {id:'photo-frame',title:'Digital Photo Frame',kind:'physical',group:'home',description:'A frame for our favourite memories with family and friends.',image:'https://images.unsplash.com/photo-1765210866964-5e89d82a8eb9?auto=format&fit=crop&w=800&q=82',amazonQuery:'digital picture frame wifi'},
-    {id:'bedding',title:'Premium Bedding Collection',kind:'physical',group:'home',description:'Comfortable, timeless bedding for our future home.',image:'https://images.unsplash.com/photo-1601276174812-63280a55656e?auto=format&fit=crop&w=800&q=82',amazonQuery:'luxury cotton bedding duvet cover set'},
-    {id:'coffee',title:'Coffee & Tea Station',kind:'physical',group:'home',description:'A coffee maker and tea essentials for slow mornings together.',image:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'SourceAxis provides sourcing assessment and scoped quotations, not a ready-to-buy appliance listing.'},
-    {id:'cpbiomed',title:'Reproductive Health Equipment',kind:'fund',group:'community',description:'A contribution towards reproductive-health equipment and supplies.',image:'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://cpbiomed.com/products/',referenceLabel:'Explore CP Biomed',referenceNote:'CP Biomed lists specialist assisted-reproduction equipment and laboratory supplies.'},
-    {id:'hubx',title:'Education & Career Support',kind:'fund',group:'community',description:'Support opportunities for learning and professional development.',image:'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://hubxconsulting.com/',referenceLabel:'Explore HubX',referenceNote:'Explore learning, career and professional-development pathways offered through HubX.'},
-    {id:'totalcare',title:'Maternal & Newborn Care',kind:'fund',group:'community',description:'A proposed donation towards healthcare for pregnant women and newborns.',image:'./assets/totalcare-transparent.webp',logo:true,donation:true}
+    {id:'first-home',title:'Our First Home Fund',kind:'fund',group:'home',description:'Help us create a home together, wherever our journey takes us.',image:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',cta:'Contribute'},
+    {id:'honeymoon',title:'Honeymoon Experiences',kind:'fund',group:'travel',description:'A contribution towards memorable experiences on our honeymoon.',image:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=82',cta:'Contribute'},
+    {id:'flights',title:'Flights & Future Adventures',kind:'fund',group:'travel',description:'Support the travels and new experiences we will share.',image:'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=82',cta:'Contribute'},
+    {id:'date-nights',title:'Date Nights for Two',kind:'fund',group:'travel',description:'Help us make time for special evenings and shared memories.',image:'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=82',cta:'Contribute'},
+    {id:'home-decor',title:'Home Furnishings & Décor',kind:'fund',group:'home',description:'Thoughtful pieces to make wherever we settle warm and welcoming.',image:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'SourceAxis publishes sourcing assessment fees and quotes project services separately; this is not a retail product catalogue.',cta:'Contribute'},
+    {id:'kitchen',title:'Our Kitchen Essentials',kind:'fund',group:'home',description:'Everyday essentials for meals and moments around our table.',image:'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'Explore sourcing assessment and pricing, rather than an immediate product purchase.',cta:'Gift this'},
+    {id:'memories',title:'Wedding Memories & Photo Album',kind:'fund',group:'home',description:'A beautiful way to preserve the story of our wedding.',image:'https://images.unsplash.com/photo-1677658288237-2fff291a34f0?auto=format&fit=crop&w=800&q=82',amazonQuery:'wedding photo album personalised linen keepsake book',cta:'Gift this'},
+    {id:'luggage',title:'Matching Travel Luggage',kind:'physical',group:'travel',description:'A durable luggage set for the many adventures ahead.',image:'https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?auto=format&fit=crop&w=900&q=80',amazonQuery:'matching carry on luggage suitcase set',cta:'Gift this'},
+    {id:'cars',title:'A Car for Our Next Chapter',kind:'physical',group:'travel',description:'A contribution towards a vehicle for the road ahead.',image:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://jovicoworld.com/cars',referenceLabel:'Browse Cars',referenceNote:'Explore available cars and pre-orders with Jovico; prices and delivery arrangements depend on the chosen vehicle.',cta:'Contribute'},
+    {id:'photo-frame',title:'Digital Photo Frame',kind:'physical',group:'home',description:'A frame for our favourite memories with family and friends.',image:'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=80',amazonQuery:'digital picture frame wifi',cta:'Gift this'},
+    {id:'bedding',title:'Premium Bedding Collection',kind:'physical',group:'home',description:'Comfortable, timeless bedding for our future home.',image:'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=900&q=80',amazonQuery:'luxury cotton bedding duvet cover set',cta:'Gift this'},
+    {id:'coffee',title:'Coffee & Tea Station',kind:'physical',group:'home',description:'A coffee maker and tea essentials for slow mornings together.',image:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://sourceaxisglobal.com/pricing',referenceLabel:'Explore SourceAxis',referenceNote:'SourceAxis provides sourcing assessment and scoped quotations, not a ready-to-buy appliance listing.',cta:'Gift this'},
+    {id:'cpbiomed',title:'Reproductive Health Equipment',kind:'fund',group:'community',description:'A contribution towards reproductive-health equipment and supplies.',image:'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=82',referenceUrl:'https://cpbiomed.com/products/',referenceLabel:'Explore CP Biomed',referenceNote:'CP Biomed lists specialist assisted-reproduction equipment and laboratory supplies.',cta:'Contribute'},
+    {id:'hubx',title:'Education & Career Support',kind:'fund',group:'community',description:'Support opportunities for learning and professional development.',image:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80',referenceUrl:'https://hubxconsulting.com/',referenceLabel:'Explore HubX',referenceNote:'Explore learning, career and professional-development pathways offered through HubX.',cta:'Contribute'},
+    {id:'totalcare',title:'Maternal & Newborn Care',kind:'fund',group:'community',description:'A proposed donation towards healthcare for pregnant women and newborns.',image:'./assets/totalcare-transparent.webp',logo:true,donation:true,cta:'Contribute'}
   ];
   const cfg = window.WEDDING_REGISTRY_CONFIG || {};
   const apiBase = String(cfg.apiBase || '').trim().replace(/\/$/,'');
@@ -29,6 +30,8 @@
   const bankAccounts = cfg.bankAccounts && typeof cfg.bankAccounts === 'object' ? cfg.bankAccounts : {};
   const status = Object.create(null);
   let activeFilter = 'all';
+  let expanded = false;
+  const mobileLayout = window.matchMedia('(max-width:600px)');
   const statusLine = document.getElementById('registry-status-line');
   const modalTitle = document.getElementById('registry-dialog-title');
   const modalIntro = document.getElementById('registry-dialog-intro');
@@ -50,7 +53,9 @@
     const filtered = items.filter(function(item) {
       return activeFilter === 'all' || (activeFilter === 'fund' && item.kind === 'fund') || item.group === activeFilter;
     });
-    grid.innerHTML = filtered.map(function(item) {
+    const initialCount = mobileLayout.matches ? 4 : 6;
+    const displayed = expanded ? filtered : filtered.slice(0,initialCount);
+    grid.innerHTML = displayed.map(function(item) {
       const stage = status[item.id];
       const badge = item.kind === 'physical' && ['reserved','purchased'].includes(stage)
         ? '<span class="registry-tag is-'+stage+'">'+(stage==='reserved'?'Reserved':'Purchased')+'</span>' : '';
@@ -59,12 +64,18 @@
         '<img src="'+item.image+'" loading="lazy" decoding="async" alt="'+(item.logo?'TotalCare Medical logo':'')+'" onerror="this.style.opacity=0">'+badge+'</div>'+
         '<div class="registry-card-content"><h3>'+escapeHTML(item.title)+'</h3>'+
         '<p class="registry-card-description">'+escapeHTML(item.description)+'</p>'+
-        '<button class="registry-action-primary" type="button" data-id="'+item.id+'">Contribute</button>'+
+        '<button class="registry-action-primary" type="button" data-id="'+item.id+'">'+escapeHTML(item.cta || 'Contribute')+'</button>'+
         '</div></article>';
     }).join('');
-    statusLine.textContent = filtered.length+' gift'+(filtered.length===1?'':'s');
+    statusLine.textContent = 'Showing '+displayed.length+' of '+filtered.length+' gifts';
+    const moreAvailable = filtered.length > initialCount;
+    moreButton.hidden = !moreAvailable;
+    moreButton.setAttribute('aria-expanded',String(expanded));
+    moreButton.textContent = expanded ? 'Show less ↑' : 'See more gifts ('+(filtered.length-initialCount)+') ↓';
     panel.querySelectorAll('.registry-filter').forEach(function(button) {
       button.setAttribute('aria-pressed', String(button.dataset.filter===activeFilter));
+      if(button.dataset.filter==='all')button.textContent='All gifts ('+items.length+')';
+      if(button.dataset.filter==='fund')button.textContent='Funds & Causes ('+items.filter(function(item){return item.kind==='fund';}).length+')';
     });
   }
   function notify(text,error) {
@@ -236,7 +247,23 @@
     const item=items.find(function(row){return row.id===button.dataset.id;});
     if(item)open(item,'item');
   });
-  panel.querySelectorAll('.registry-filter').forEach(function(button){button.addEventListener('click',function(){activeFilter=button.dataset.filter;render();});});
+  panel.querySelectorAll('.registry-filter').forEach(function(button){
+    button.addEventListener('click',function(){
+      activeFilter=button.dataset.filter;
+      expanded=false;
+      render();
+    });
+  });
+  moreButton.addEventListener('click',function(){
+    const collapse = expanded;
+    expanded = !expanded;
+    render();
+    if (collapse) {
+      const y=panel.scrollTop + grid.getBoundingClientRect().top-panel.getBoundingClientRect().top - 16;
+      panel.scrollTo({top:Math.max(0,y),behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});
+    }
+  });
+  mobileLayout.addEventListener('change',function(){if(!expanded)render();});
   document.getElementById('registry-custom-gift').addEventListener('click',function(){open(null,'custom');});
   document.getElementById('registry-contact').addEventListener('click',function(){open(null,'contact');});
   document.getElementById('registry-contact-footer').addEventListener('click',function(){open(null,'contact');});
