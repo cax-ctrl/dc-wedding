@@ -33,4 +33,4 @@ The private delivery address is not published; the contact option directs guests
 
 ## Private RSVP manager
 
-Organiser Google Sheet: https://docs.google.com/spreadsheets/d/1cZ2IelToxKsCgEpwf3ANswE44nAqq_0PmoXBNDfsMUM/edit (restricted access). See [rsvp-service/README.md](rsvp-service/README.md) for deployment and approval instructions, country-specific validation, message channels, invitation-code issuance, and entrance check-in.
+The private organiser Google Sheet is shared directly with authorised organisers, not linked from this public repository. See [rsvp-service/README.md](rsvp-service/README.md) for deployment and approval instructions, country-specific validation, message channels, invitation-code issuance, and entrance check-in.
