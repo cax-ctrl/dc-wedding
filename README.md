@@ -34,3 +34,9 @@ The private delivery address is not published; the contact option directs guests
 ## Private RSVP manager
 
 The private organiser Google Sheet is shared directly with authorised organisers, not linked from this public repository. See [rsvp-service/README.md](rsvp-service/README.md) for deployment and approval instructions, country-specific validation, message channels, invitation-code issuance, and entrance check-in.
+
+## Website privacy and terms
+
+The final sponsor page has a compact single-row legal navigation adjacent to **Back to the beginning**: **Privacy Policy**, **Terms of Use** and **Cookies**. Each opens a keyboard-accessible same-page dialog using `legal.css` and `legal.js`. The RSVP form links directly to the privacy panel before collection.
+
+**Pending before the RSVP service is opened:** confirm the formal data controller's legal identity and direct contact, HubX Limited's role (if any), any specific optional HubX outreach purpose and consent channel, the records retention/deletion schedule, cross-border processing details, and gift/donation receiver/refund terms. Do not repurpose wedding telephone numbers for HubX marketing merely because they were supplied for RSVP. A separate unticked, specific opt-in and an auditable consent record will be needed before implementing secondary marketing; this is intentionally not activated yet.
