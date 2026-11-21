@@ -1,6 +1,6 @@
 'use strict';
 
-// On-page gallery for the two original illustrated photographs.
+// On-page gallery for the three illustrated couple photographs.
 // Native <dialog> provides Escape-key dismissal and restores focus on close.
 (function setupStoryGallery(){
   const dialog=document.getElementById('story-lightbox');
@@ -10,7 +10,8 @@
   if(!dialog||!image||!close||!buttons.length)return;
   const photos={
     '1':{src:'./assets/story-moment-1.webp',alt:'Deborah and Caleb making playful expressions together'},
-    '2':{src:'./assets/story-moment-2.webp',alt:'Deborah and Caleb smiling together'}
+    '2':{src:'./assets/story-moment-2.webp',alt:'Deborah and Caleb smiling together'},
+    '3':{src:'./assets/story-moment-3.webp',alt:'Deborah and Caleb smiling together in blue jackets'}
   };
   let previousFocus=null;
   buttons.forEach(function(button){
