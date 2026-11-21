@@ -71,16 +71,21 @@
     modalMessage.textContent = text || '';
     modalMessage.style.color = error ? '#985246' : '#526b50';
   }
-  function contact() {
-    modalTitle.textContent = 'Delivery address';
-    modalIntro.textContent = 'Please contact us before arranging delivery of a physical gift.';
+  function contact(reason) {
+    const payment = reason === 'payment';
+    modalTitle.textContent = payment ? 'Payment details' : 'Delivery address';
+    modalIntro.textContent = payment
+      ? 'Please request verified payment details before transferring.'
+      : 'Please contact us before arranging delivery of a physical gift.';
     const email = String(cfg.contactEmail || '').trim();
     const whatsapp = String(cfg.contactWhatsApp || '').replace(/[^\d]/g,'');
     modalBody.innerHTML =
-      '<p class="registry-dialog-note">Our delivery country and address have not yet been confirmed.</p>'+
-      (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '<div class="registry-dialog-actions"><a class="primary" href="mailto:'+encodeURIComponent(email)+'?subject=Wedding%20gift%20delivery">Email us</a></div>' : '')+
+      '<p class="registry-dialog-note">'+(payment
+        ? 'Receiving details for this payment method have not yet been confirmed.'
+        : 'Our delivery country and address have not yet been confirmed.')+'</p>'+
+      (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '<div class="registry-dialog-actions"><a class="primary" href="mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent(payment?'Wedding gift payment enquiry':'Wedding gift delivery')+'">Email us</a></div>' : '')+
       (whatsapp ? '<div class="registry-dialog-actions"><a class="secondary" href="https://wa.me/'+whatsapp+'" target="_blank" rel="noopener noreferrer">WhatsApp us</a></div>' : '')+
-      (!email && !whatsapp ? '<p class="registry-dialog-note">Please contact the person who shared your invitation for delivery details.</p>' : '');
+      (!email && !whatsapp ? '<p class="registry-dialog-note">Please contact the person who shared your invitation for '+(payment?'payment':'delivery')+' details.</p>' : '');
   }
   function options(item) {
     const ref = reference(item);
@@ -169,7 +174,7 @@
         } else {
           info.innerHTML='<p class="registry-dialog-note">Verified '+code+' bank details are not yet available. Please contact us before transferring.</p>';
           actions.innerHTML='<button class="secondary" id="registry-bank-contact" type="button">Contact us</button>';
-          document.getElementById('registry-bank-contact').addEventListener('click',contact);
+          document.getElementById('registry-bank-contact').addEventListener('click',function(){contact('payment');});
         }
       } else if(method==='alipay') {
         const account=cfg.alipayTransfer;
@@ -184,7 +189,7 @@
         } else {
           info.innerHTML='<p class="registry-dialog-note">Alipay receiving details are not yet available. Please contact us before transferring.</p>';
           actions.innerHTML='<button class="secondary" id="registry-alipay-contact" type="button">Contact us</button>';
-          document.getElementById('registry-alipay-contact').addEventListener('click',contact);
+          document.getElementById('registry-alipay-contact').addEventListener('click',function(){contact('payment');});
         }
       } else {
         const ready=Boolean(paymentBase && enabledPayments.includes(method));
