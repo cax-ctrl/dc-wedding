@@ -52,7 +52,7 @@ body:has(dialog[open]) .wedding-audio-toggle{opacity:0;pointer-events:none}
 @media(max-width:600px){
   .wedding-audio-toggle{
     left:max(8px,env(safe-area-inset-left));
-    bottom:calc(10px + env(safe-area-inset-bottom));
+    bottom:calc(64px + env(safe-area-inset-bottom));
     min-width:93px;
     padding:7px 11px;
     font-size:.68rem;
