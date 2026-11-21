@@ -253,7 +253,30 @@ body:has(dialog[open]) .page-jump-controls{
   pointer-events:none;
 }
 @media(max-width:600px){
-  .page-jump-controls{right:max(6px,env(safe-area-inset-right));gap:6px}
+  /* Keep the page arrows away from central headings and long-form text. */
+  .page-jump-controls{
+    right:max(6px,env(safe-area-inset-right));
+    top:72%;
+    gap:8px;
+  }
+  .page-jump-controls button{
+    background:rgba(248,246,239,.14);
+    border-color:rgba(82,107,86,.32);
+    box-shadow:none;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+  .page-jump-controls button svg{
+    filter:drop-shadow(0 1px 1px rgba(248,246,239,.65));
+  }
+  .page-jump-controls button:hover:not(:disabled),
+  .page-jump-controls button:focus-visible{
+    background:rgba(248,246,239,.75);
+    border-color:#739078;
+  }
+}
+@media(max-width:600px) and (max-height:560px){
+  .page-jump-controls{top:64%}
 }
 @media(prefers-reduced-motion:reduce){
   .page-jump-controls,.page-jump-controls button{transition:none!important}
