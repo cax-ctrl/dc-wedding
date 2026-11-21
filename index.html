@@ -366,10 +366,14 @@
         <label><input type="radio" name="sponsorMethod" value="alipay"> Alipay</label>
       </fieldset>
       <div class="giving-payment-info" id="sponsor-payment-info" aria-live="polite"></div>
+      <label class="giving-field" for="sponsor-transfer-ref">Payment reference <small>(optional · if you have already transferred)</small>
+        <input type="text" id="sponsor-transfer-ref" name="transferReference" maxlength="100" placeholder="Reference shown by your bank">
+      </label>
       <label class="giving-consent" for="sponsor-consent">
         <input type="checkbox" id="sponsor-consent" required>
         <span>I understand that sponsorship and logo placement require organiser approval and payment verification.</span>
       </label>
+      <button type="button" class="giving-policy" data-legal-open="privacy">Privacy Policy</button>
       <p class="giving-message" id="sponsor-message" role="status" aria-live="polite"></p>
       <button type="submit" class="giving-submit" id="sponsor-submit">Prepare sponsorship request</button>
       <p class="giving-help" id="sponsor-status-note"></p>
@@ -403,6 +407,8 @@
         <input id="gift-transfer-reference" name="transferReference" type="text" maxlength="100" placeholder="Reference shown by your bank">
       </label>
       <p class="giving-help">We will verify receipt of funds before marking this gift as recorded. Do not share banking passwords or PINs.</p>
+      <label class="giving-consent" for="gift-notice-consent"><input id="gift-notice-consent" type="checkbox" required><span>I agree to my details being used to match and confirm this gift.</span></label>
+      <button type="button" class="giving-policy" data-legal-open="privacy">Privacy Policy</button>
       <p class="giving-message" id="gift-notice-message" role="status" aria-live="polite"></p>
       <button type="submit" id="gift-notice-submit" class="giving-submit">Prepare gift notice</button>
     </form>
