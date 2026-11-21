@@ -1,6 +1,6 @@
 // Cloudflare Worker + D1: shared, atomic gift reservation states.
 // Configure REGISTRY_DB, ALLOWED_ORIGINS and REGISTRY_ADMIN_TOKEN outside the public repo.
-const IDS = new Set(['luggage', 'kindles', 'photo-frame', 'bedding', 'coffee']);
+const IDS = new Set(['luggage', 'cars', 'photo-frame', 'bedding', 'coffee']);
 const HOLD_SECONDS = 72 * 60 * 60;
 function json(body, status = 200, headers = {}) {
   return new Response(JSON.stringify(body), {status, headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers}});
