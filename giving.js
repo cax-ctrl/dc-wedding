@@ -224,8 +224,10 @@
     if(!tracking || !ready)return;
     statusButton.disabled=true;
     try{
-      const query=new URLSearchParams({id:tracking.id,token:tracking.token});
-      const r=await fetch(givingBase+'/api/gifts/status?'+query.toString(),{cache:'no-store'});
+      const r=await fetch(givingBase+'/api/gifts/status',{
+        method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',
+        body:JSON.stringify({id:tracking.id,token:tracking.token})
+      });
       const data=await r.json().catch(()=>({}));
       if(!r.ok)throw Error('Status could not be checked.');
       const header=document.getElementById('gift-notice-result-heading');
