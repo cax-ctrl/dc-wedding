@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS registry_items (
   updated_at INTEGER NOT NULL DEFAULT (unixepoch())
 );
 INSERT OR IGNORE INTO registry_items (id) VALUES
-  ('luggage'),('kindles'),('photo-frame'),('bedding'),('coffee');
+  ('luggage'),('cars'),('photo-frame'),('bedding'),('coffee');
 CREATE INDEX IF NOT EXISTS idx_registry_reserved_until ON registry_items(status,reserved_until);
