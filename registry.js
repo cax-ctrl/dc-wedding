@@ -1,5 +1,5 @@
 'use strict';
-/* Wedding registry — no fabricated payments or shared availability. */
+/* Deborah & Caleb — a single, straightforward contribution journey. */
 (function () {
   const panel = document.getElementById('registry');
   const grid = document.getElementById('registry-grid');
@@ -24,269 +24,218 @@
   const cfg = window.WEDDING_REGISTRY_CONFIG || {};
   const apiBase = String(cfg.apiBase || '').trim().replace(/\/$/, '');
   const paymentBase = String(cfg.paymentApiBase || '').trim().replace(/\/$/, '');
-  const demo = new URLSearchParams(location.search).get('registryDemo') === '1';
-  const demoKey = 'dc-registry-preview-v1';
-  const actualStatus = {};
-  let serverAvailable = Boolean(apiBase);
-  let currentFilter = 'all';
-  let selected = null;
-  const statusNode = document.getElementById('registry-status-line');
-  const modalTitle = document.getElementById('registry-dialog-title');
-  const modalIntro = document.getElementById('registry-dialog-intro');
-  const modalBody = document.getElementById('registry-dialog-body');
-  const modalMessage = document.getElementById('registry-dialog-message');
+  const enabledPayments = Array.isArray(cfg.enabledPaymentMethods) ? cfg.enabledPaymentMethods : [];
+  const bankAccounts = cfg.bankAccounts && typeof cfg.bankAccounts === 'object' ? cfg.bankAccounts : {};
+  const currentStatus = Object.create(null);
+  let activeFilter = 'all';
+  const statusLine = document.getElementById('registry-status-line');
+  const title = document.getElementById('registry-dialog-title');
+  const intro = document.getElementById('registry-dialog-intro');
+  const body = document.getElementById('registry-dialog-body');
+  const message = document.getElementById('registry-dialog-message');
+  const symbols = {USD:'$',GBP:'£',NGN:'₦'};
 
   function escapeHTML(value) {
     return String(value).replace(/[&<>"']/g, function (char) {
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char];
     });
   }
-  function getDemoStatuses() {
-    if (!demo) return {};
-    try {return JSON.parse(sessionStorage.getItem(demoKey) || '{}') || {};} catch (_) {return {};}
-  }
-  function setDemoStatus(id, status) {
-    const all = getDemoStatuses();
-    if (status === 'available') delete all[id]; else all[id] = status;
-    try {sessionStorage.setItem(demoKey, JSON.stringify(all));} catch (_) {}
-    render();
-  }
-  function getStatus(item) {
-    if (item.kind === 'fund') return 'fund';
-    if (demo) return getDemoStatuses()[item.id] || 'available';
-    return actualStatus[item.id] || 'available';
-  }
   function amazonUrl(query) {
     return 'https://www.amazon.co.uk/s?k=' + encodeURIComponent(query);
   }
+  function badge(item) {
+    const status = currentStatus[item.id];
+    if (item.kind !== 'physical' || !['reserved','purchased'].includes(status)) return '';
+    return '<span class="registry-tag is-' + status + '">' + (status === 'reserved' ? 'Reserved' : 'Purchased') + '</span>';
+  }
   function visibleItems() {
     return items.filter(function (item) {
-      if (currentFilter === 'all') return true;
-      if (currentFilter === 'fund') return item.kind === 'fund';
-      return item.group === currentFilter;
+      if (activeFilter === 'all') return true;
+      if (activeFilter === 'fund') return item.kind === 'fund';
+      return item.group === activeFilter;
     });
   }
-  function render() {
-    const chosen = visibleItems();
-    grid.innerHTML = chosen.map(function (item) {
-      const status = getStatus(item);
-      const label = item.kind === 'fund' ? 'Flexible gift' : status === 'reserved' ? 'Reserved' : status === 'purchased' ? 'Purchased' : 'Gift idea';
-      const hasAmazon = Boolean(item.amazonQuery);
-      const amazon = hasAmazon ? '<a class="registry-action-secondary" href="' + amazonUrl(item.amazonQuery) + '" target="_blank" rel="noopener noreferrer" aria-label="Browse Amazon UK for ' + escapeHTML(item.title) + '">Browse Amazon ↗</a>' : '';
-      let ownedHold = false;
-      if (!demo && status === 'reserved') {try {ownedHold = Boolean(sessionStorage.getItem('dc-reservation-' + item.id));} catch (_) {}}
-      const manageable = demo || ownedHold;
-      const reserveButton = hasAmazon && (status === 'available' || manageable) ?
-        '<button type="button" class="registry-reserve-link" data-action="' + ((demo && status !== 'available') ? 'manage' : 'reserve') + '" data-id="' + item.id + '">' + (status === 'available' ? 'Reserve this gift' : 'Manage reservation') + ' ↗</button>' : '';
+  function renderCards() {
+    const selected = visibleItems();
+    grid.innerHTML = selected.map(function (item) {
       return '<article class="registry-card">' +
-        '<div class="registry-image-wrap"><img loading="lazy" decoding="async" src="' + item.image + '" alt="" onerror="this.style.opacity=0" />' +
-        '<span class="registry-tag ' + (status === 'reserved' || status === 'purchased' ? 'is-' + status : '') + '">' + label + '</span></div>' +
+        '<div class="registry-image-wrap"><img loading="lazy" decoding="async" src="' + item.image + '" alt="" onerror="this.style.opacity=0">' + badge(item) + '</div>' +
         '<div class="registry-card-content"><h3>' + escapeHTML(item.title) + '</h3>' +
         '<p class="registry-card-description">' + escapeHTML(item.description) + '</p>' +
-        '<p class="registry-card-subline">' + (hasAmazon ? 'Give an amount or purchase later' : 'Give any amount you wish') + '</p>' +
-        '<div class="registry-card-actions"><button type="button" class="registry-action-primary" data-action="contribute" data-id="' + item.id + '">Contribute</button>' +
-        (hasAmazon ? amazon : '') +
-        '</div>' + reserveButton + '</div></article>';
+        '<button class="registry-action-primary" type="button" data-id="' + item.id + '">Contribute</button>' +
+        '</div></article>';
     }).join('');
-    statusNode.textContent = chosen.length + ' thoughtful ' + (chosen.length === 1 ? 'gift' : 'gifts') + ' · Contributions are entirely optional.';
+    statusLine.textContent = selected.length + ' gift' + (selected.length===1 ? '' : 's');
     panel.querySelectorAll('.registry-filter').forEach(function (button) {
-      button.setAttribute('aria-pressed', String(button.dataset.filter === currentFilter));
+      button.setAttribute('aria-pressed', String(button.dataset.filter === activeFilter));
     });
   }
-  function notify(message, error) {
-    modalMessage.textContent = message || '';
-    modalMessage.style.color = error ? '#935345' : '#526a4a';
+  function notify(text, error) {
+    message.textContent = text || '';
+    message.style.color = error ? '#8b4e41' : '#4c6549';
   }
-  function showModal(item, mode) {
-    selected = item || null;
+  function openModal(item, mode) {
     notify('');
-    modalTitle.textContent = item ? item.title : 'Other ways to give';
-    modalIntro.textContent = item ? item.description : 'A gift from the heart, in whatever way works for you.';
-    if (mode === 'reserve') renderReservation(item);
-    else if (mode === 'manage' && demo) renderDemoManager(item);
-    else if (mode === 'contribute') renderContribution(item);
-    else if (mode === 'other') renderOther();
+    title.textContent = item ? item.title : mode === 'contact' ? 'Delivery address' : 'A gift of your choice';
+    intro.textContent = item ? item.description : mode === 'contact'
+      ? 'A note about sending a physical gift.' : 'Choose the amount and payment method that suit you.';
+    if (mode === 'contact') renderContact();
+    else if (item && item.amazonQuery) renderItemChoices(item);
+    else renderTransfer(item, mode === 'bank' ? 'bank' : 'bank');
     if (!dialog.open) dialog.showModal();
   }
-  function buildInput(label, type, id, attributes) {
-    return '<label for="' + id + '">' + label + '</label><input id="' + id + '" type="' + type + '" ' + (attributes || '') + '>';
+  function renderContact() {
+    const email = String(cfg.contactEmail || '').trim();
+    const whatsapp = String(cfg.contactWhatsApp || '').replace(/[^\d]/g,'');
+    body.innerHTML =
+      '<p class="registry-dialog-note">We have not confirmed a delivery country or address. Before ordering a physical gift, please contact us to arrange delivery.</p>' +
+      (email ? '<p class="registry-dialog-actions"><a class="primary" href="mailto:' + encodeURIComponent(email) + '?subject=Deborah%20%26%20Caleb%20%E2%80%94%20Gift%20delivery">Email us</a></p>' : '') +
+      (whatsapp ? '<p class="registry-dialog-actions"><a class="secondary" href="https://wa.me/' + whatsapp + '?text=Hello%2C%20I%20would%20like%20to%20arrange%20a%20wedding%20gift%20delivery." target="_blank" rel="noopener noreferrer">Contact on WhatsApp</a></p>' : '') +
+      (!email && !whatsapp ? '<p class="registry-dialog-note">Please contact the person who shared your wedding invitation to request our delivery details.</p>' : '');
   }
-  function renderContribution(item) {
-    modalBody.innerHTML =
-      '<p class="registry-dialog-note">Choose a contribution towards ' + escapeHTML(item ? item.title : 'our new chapter') + '. No amount is expected or required.</p>' +
+  function renderItemChoices(item) {
+    const status = currentStatus[item.id];
+    const itemUnavailable = ['reserved','purchased'].includes(status);
+    body.innerHTML =
+      '<p class="registry-step-label">Choose how you would like to give</p>' +
+      '<div class="registry-choice-row">' +
+      (itemUnavailable ?
+        '<span class="registry-choice-muted">This item is ' + status + '. Please consider contributing its equivalent value instead.</span>' :
+        '<a class="registry-choice" href="' + amazonUrl(item.amazonQuery) + '" target="_blank" rel="noopener noreferrer"><strong>Browse Amazon</strong><span>Explore suggested items ↗</span></a>') +
+      '<button type="button" id="registry-choose-transfer" class="registry-choice"><strong>Transfer</strong><span>Give an equivalent value</span></button>' +
+      '</div>' +
+      '<p class="registry-dialog-note">Amazon opens in a new tab. Please contact us for the delivery address before placing an order.</p>' +
+      '<button type="button" id="registry-choice-contact" class="registry-inline-link">Contact us for delivery address</button>';
+    document.getElementById('registry-choose-transfer').addEventListener('click',function () {renderTransfer(item,'bank');});
+    document.getElementById('registry-choice-contact').addEventListener('click',renderContact);
+  }
+  function getConfiguredBank(currency) {
+    const account = bankAccounts[currency];
+    if (!account || !account.accountName || !account.bankName || !account.accountNumber) return null;
+    return account;
+  }
+  function renderTransfer(item, initialMethod) {
+    body.innerHTML =
       '<form id="registry-contribution-form">' +
-      '<label for="registry-currency">Currency</label><select id="registry-currency"><option value="GBP">GBP — British pounds</option><option value="USD">USD — US dollars</option><option value="NGN">NGN — Nigerian naira</option></select>' +
-      buildInput('Gift amount', 'number', 'registry-amount', 'min="1" step="0.01" inputmode="decimal" placeholder="Enter an amount" required') +
-      '<div class="registry-dialog-actions"><button type="submit" class="primary"' + (!paymentBase ? ' disabled' : '') + '>Continue to secure payment</button></div>' +
-      '</form>' +
-      (item && item.amazonQuery ? '<p class="registry-dialog-note">Prefer to purchase the item? <a href="' + amazonUrl(item.amazonQuery) + '" target="_blank" rel="noopener noreferrer"><u>Browse Amazon UK ↗</u></a>. Delivery is not yet arranged.</p>' : '') +
-      (!paymentBase ? '<p class="registry-dialog-note">Secure online contributions are not yet enabled. No payment can be taken here.</p>' : '');
+      '<div class="registry-form-heading"><span class="registry-step-label">Gift amount</span>' +
+      (item && item.amazonQuery ? '<button class="registry-inline-link" type="button" id="registry-back-to-choices">← Gift options</button>' : '') +
+      '</div>' +
+      '<div class="registry-amount-row">' +
+      '<label class="registry-field registry-currency-field" for="registry-currency"><span>Currency</span><select id="registry-currency" name="currency"><option value="USD">$ USD</option><option value="GBP">£ GBP</option><option value="NGN">₦ NGN</option></select></label>' +
+      '<label class="registry-field registry-value-field" for="registry-amount"><span>Amount</span><span class="registry-amount-input"><span id="registry-amount-symbol" aria-hidden="true">$</span><input type="number" id="registry-amount" name="amount" min="0.01" step="0.01" inputmode="decimal" autocomplete="off" placeholder="0.00" required></span></label>' +
+      '</div>' +
+      '<fieldset class="registry-methods"><legend class="registry-step-label">Payment option</legend>' +
+      '<label><input type="radio" name="payment-method" value="bank"><span>Bank transfer</span></label>' +
+      '<label><input type="radio" name="payment-method" value="paypal"><span>PayPal</span></label>' +
+      '<label><input type="radio" name="payment-method" value="stripe"><span>Stripe</span></label>' +
+      '</fieldset>' +
+      '<div id="registry-method-information" class="registry-method-information" aria-live="polite"></div>' +
+      '<div class="registry-dialog-actions" id="registry-checkout-actions"></div>' +
+      '</form>';
     const form = document.getElementById('registry-contribution-form');
-    form.addEventListener('submit', async function (event) {
+    const currency = document.getElementById('registry-currency');
+    const amount = document.getElementById('registry-amount');
+    const methodInfo = document.getElementById('registry-method-information');
+    const actions = document.getElementById('registry-checkout-actions');
+    const currentMethod = form.querySelector('input[value="' + initialMethod + '"]');
+    if (currentMethod) currentMethod.checked = true;
+    if (item && item.amazonQuery) {
+      document.getElementById('registry-back-to-choices').addEventListener('click',function(){renderItemChoices(item);});
+    }
+    function updateMethod() {
+      const selectedCurrency = currency.value;
+      const chosenMethod = form.querySelector('input[name="payment-method"]:checked')?.value || 'bank';
+      document.getElementById('registry-amount-symbol').textContent = symbols[selectedCurrency];
+      const acct = getConfiguredBank(selectedCurrency);
+      if (chosenMethod === 'bank') {
+        if (acct) {
+          const rows = [['Account name', acct.accountName],['Bank',acct.bankName],['Account number',acct.accountNumber],
+            ['Sort code',acct.sortCode],['IBAN',acct.iban],['SWIFT/BIC',acct.swift]]
+            .filter(function (row){return typeof row[1] === 'string' && row[1].trim();});
+          methodInfo.innerHTML = '<dl class="registry-bank-details">' +
+            rows.map(function(row){return '<div><dt>' + escapeHTML(row[0]) + '</dt><dd>' + escapeHTML(row[1]) + '</dd></div>';}).join('') + '</dl>' +
+            '<p class="registry-dialog-note">Use your name as the transfer reference and contact us to confirm your gift.</p>';
+          actions.innerHTML = '<button type="button" class="primary" id="registry-copy-bank">Copy bank details</button>';
+          document.getElementById('registry-copy-bank').addEventListener('click',async function () {
+            const details=rows.map(function(row){return row[0]+': '+row[1];}).join('\n');
+            try {
+              await navigator.clipboard.writeText(details);
+              notify('Bank details copied.');
+            } catch (_) { notify('Select and copy the displayed bank details.',true); }
+          });
+        } else {
+          methodInfo.innerHTML = '<p class="registry-dialog-note">Bank details for ' + selectedCurrency + ' will be provided once confirmed. Please contact us before transferring.</p>';
+          actions.innerHTML = '<button class="secondary" type="button" id="registry-bank-contact">Contact us</button>';
+          document.getElementById('registry-bank-contact').addEventListener('click',renderContact);
+        }
+      } else {
+        const ready = Boolean(paymentBase && enabledPayments.includes(chosenMethod));
+        const label = chosenMethod === 'paypal' ? 'PayPal' : 'Stripe';
+        methodInfo.innerHTML = '<p class="registry-dialog-note">' +
+          (ready ? 'You will be directed to ' + label + ' to complete a secure payment.' :
+            label + ' payments are not yet available. You can choose another payment option.') + '</p>';
+        actions.innerHTML = '<button type="submit" class="primary"' + (!ready ? ' disabled' : '') +
+          '>Continue with ' + label + '</button>';
+      }
+    }
+    currency.addEventListener('change',updateMethod);
+    form.querySelectorAll('input[name="payment-method"]').forEach(function(control) {control.addEventListener('change',updateMethod);});
+    form.addEventListener('submit',async function(event) {
       event.preventDefault();
-      if (!paymentBase) return;
-      const amount = Number(document.getElementById('registry-amount').value);
-      const currency = document.getElementById('registry-currency').value;
-      if (!Number.isFinite(amount) || amount <= 0 || !['GBP','USD','NGN'].includes(currency)) {notify('Enter a valid amount and currency.', true);return;}
-      const button = form.querySelector('button[type=submit]'); button.disabled = true;
+      const method = form.querySelector('input[name="payment-method"]:checked')?.value;
+      if (!['paypal','stripe'].includes(method) || !paymentBase || !enabledPayments.includes(method)) return;
+      const value = Number(amount.value);
+      if (!Number.isFinite(value) || value <= 0) {notify('Enter a valid gift amount.',true);amount.focus();return;}
+      const button = actions.querySelector('button[type=submit]');
+      if (button) button.disabled = true;
       notify('Opening secure checkout…');
       try {
-        const response = await fetch(paymentBase + '/api/registry/checkout', {
+        const response = await fetch(paymentBase + '/api/registry/checkout',{
           method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({itemId:item ? item.id : 'open-gift',currency:currency,amount:amount})
+          body:JSON.stringify({itemId:item?.id||'open-gift',currency:currency.value,amount:value,paymentMethod:method})
         });
-        const data = await response.json();
-        if (!response.ok || !data.checkoutUrl || !/^https:\/\//.test(data.checkoutUrl)) throw new Error('Secure checkout is currently unavailable.');
-        location.assign(data.checkoutUrl);
-      } catch (error) {notify(error.message || 'Could not open checkout. Please try again later.', true);button.disabled=false;}
-    });
-  }
-  function renderReservation(item) {
-    if (!item || item.kind !== 'physical') return;
-    const status = getStatus(item);
-    if (status !== 'available') {
-      let token = '';
-      try {token = sessionStorage.getItem('dc-reservation-' + item.id) || '';} catch (_) {}
-      if (demo) {renderDemoManager(item);return;}
-      if (status === 'reserved' && token) {
-        showOwnReservation(item, token);
-        return;
-      }
-      modalBody.innerHTML = '<p class="registry-dialog-note">This item has already been ' + (status === 'purchased' ? 'purchased' : 'reserved') + '. You are welcome to contribute towards another gift.</p>';
-      return;
-    }
-    const enabled = demo || (apiBase && serverAvailable);
-    modalBody.innerHTML = '<p class="registry-dialog-note">Reserve this item only if you intend to purchase it. We have not chosen a delivery country, so please do not send a parcel yet.</p>' +
-      (enabled ? '<form id="registry-reserve-form">' +
-      (demo ? '<div class="registry-demo-alert">Preview only — this reservation is not shared with other guests.</div>' :
-        buildInput('Your name', 'text', 'registry-guest-name', 'autocomplete="name" maxlength="100" required') +
-        buildInput('Email address', 'email', 'registry-guest-email', 'autocomplete="email" maxlength="160" required')) +
-      '<label><input type="checkbox" id="registry-intent" required style="width:auto;min-height:0;margin-right:8px">I intend to purchase this gift.</label>' +
-      '<div class="registry-dialog-actions"><button type="submit" class="primary">Confirm reservation</button></div></form>' :
-      '<p class="registry-dialog-note">Reservations will become available once the secure guest registry is connected.</p>') +
-      '<div class="registry-dialog-actions"><a class="secondary" href="' + amazonUrl(item.amazonQuery) + '" target="_blank" rel="noopener noreferrer">Browse Amazon UK ↗</a></div>';
-    const form = document.getElementById('registry-reserve-form');
-    if (!form) return;
-    form.addEventListener('submit', async function (event) {
-      event.preventDefault();
-      const button = form.querySelector('button[type=submit]');
-      button.disabled = true;
-      if (demo) {
-        setDemoStatus(item.id, 'reserved');
-        renderDemoManager(item);
-        notify('Reserved in this browser preview only. No guest reservation was made.');
-        return;
-      }
-      try {
-        const guestName = document.getElementById('registry-guest-name').value.trim();
-        const guestEmail = document.getElementById('registry-guest-email').value.trim();
-        if (!guestName || !guestEmail) throw new Error('Please enter your name and email.');
-        const response = await fetch(apiBase + '/api/registry/reserve', {
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({itemId:item.id,name:guestName,email:guestEmail})
-        });
-        const data = await response.json().catch(function () {return {};});
-        if (!response.ok) throw new Error(data.error || 'This gift may have been reserved by another guest.');
-        if (data.reservationToken) {
-          try {sessionStorage.setItem('dc-reservation-' + item.id, data.reservationToken);} catch (_) {}
-        }
-        actualStatus[item.id] = 'reserved';
-        render();
-        showOwnReservation(item, data.reservationToken || '');
-        notify('Gift reserved.');
-      } catch (error) {
-        notify(error.message || 'Unable to reserve. Please try again later.', true);
-        button.disabled = false;
-        refreshFromServer();
+        const result = await response.json();
+        const url = new URL(result.checkoutUrl);
+        if (!response.ok || url.protocol !== 'https:') throw new Error('Secure checkout is unavailable.');
+        location.assign(url.href);
+      } catch (_) {
+        notify('Secure checkout is unavailable. Please choose another option.',true);
+        if (button) button.disabled = false;
       }
     });
+    updateMethod();
   }
-  function showOwnReservation(item, token) {
-    modalBody.innerHTML = '<p class="registry-dialog-note">Your reservation is recorded. It is held for up to 72 hours unless an organiser confirms the purchase. Please arrange delivery only after we have shared an approved address.</p>' +
-      '<div class="registry-dialog-actions"><button class="secondary" type="button" id="registry-release-reservation"' + (!token ? ' disabled' : '') + '>Cancel my reservation</button></div>';
-    const release = document.getElementById('registry-release-reservation');
-    if (!release || !token) return;
-    release.addEventListener('click', async function () {
-      release.disabled = true;
-      notify('Releasing your reservation…');
-      try {
-        const response = await fetch(apiBase + '/api/registry/release', {
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({itemId:item.id,reservationToken:token})
-        });
-        if (!response.ok) throw new Error('Could not release the reservation.');
-        try {sessionStorage.removeItem('dc-reservation-' + item.id);} catch (_) {}
-        actualStatus[item.id] = 'available';
-        render();
-        renderReservation(item);
-        notify('Reservation cancelled. This gift is available again.');
-      } catch (error) {notify(error.message || 'Could not release this reservation.', true);release.disabled=false;}
-    });
-  }
-  function renderDemoManager(item) {
-    modalBody.innerHTML = '<div class="registry-demo-alert">Preview only — no shared reservation or payment has been made.</div>' +
-      '<p class="registry-dialog-note">Test the reservation and purchase statuses for this gift.</p>' +
-      '<div class="registry-dialog-actions"><button class="primary" type="button" id="registry-demo-purchase">Mark purchased</button>' +
-      '<button class="secondary" type="button" id="registry-demo-release">Release gift</button></div>';
-    document.getElementById('registry-demo-purchase').addEventListener('click', function () {
-      setDemoStatus(item.id, 'purchased'); notify('Marked as purchased in this preview.');renderDemoManager(item);
-    });
-    document.getElementById('registry-demo-release').addEventListener('click', function () {
-      setDemoStatus(item.id, 'available');notify('Made available in this preview.');renderReservation(item);
-    });
-  }
-  function renderOther() {
-    modalBody.innerHTML = '<p class="registry-dialog-note">We will make bank transfer and online gift options available here after the receiving accounts have been verified. Please do not send money to an account shared in an unofficial message.</p>' +
-      '<div class="registry-dialog-actions"><button class="primary" type="button" id="registry-other-contribute"' + (!paymentBase ? ' disabled' : '') + '>Send a gift of your choice</button></div>';
-    if (paymentBase) document.getElementById('registry-other-contribute').addEventListener('click', function () {renderContribution(null);});
-  }
-  async function refreshFromServer() {
-    if (!apiBase || demo) return;
+  async function refreshStatuses() {
+    if (!apiBase) return;
     try {
-      const response = await fetch(apiBase + '/api/registry', {headers:{'Accept':'application/json'},cache:'no-store'});
-      if (!response.ok) throw new Error('Could not load registry availability.');
-      const data = await response.json();
-      if (!data || !Array.isArray(data.items)) throw new Error('Invalid registry response.');
-      data.items.forEach(function (entry) {
-        if (entry && typeof entry.id === 'string' && ['available','reserved','purchased'].includes(entry.status)) {
-          actualStatus[entry.id] = entry.status;
-        }
+      const response = await fetch(apiBase+'/api/registry',{headers:{'Accept':'application/json'},cache:'no-store'});
+      if (!response.ok) return;
+      const payload = await response.json();
+      if (!Array.isArray(payload.items)) return;
+      payload.items.forEach(function(item) {
+        if (item && typeof item.id === 'string' && ['available','reserved','purchased'].includes(item.status))
+          currentStatus[item.id] = item.status;
       });
-      serverAvailable = true;
-      render();
-    } catch (_) {
-      serverAvailable = false;
-      render();
-      statusNode.textContent = 'Live reservation availability is temporarily unavailable. Please check back later.';
-    }
+      renderCards();
+    } catch (_) { /* Registry still displays without availability metadata. */ }
   }
 
-  grid.addEventListener('click', function (event) {
-    const action = event.target.closest('[data-action]');
-    if (!action) return;
-    const item = items.find(function (gift) {return gift.id === action.dataset.id;});
-    if (!item) return;
-    if (action.dataset.action === 'reserve' && getStatus(item) === 'purchased') return;
-    showModal(item, action.dataset.action);
+  grid.addEventListener('click',function(event) {
+    const button = event.target.closest('button[data-id]');
+    if (!button) return;
+    const item = items.find(function(value){return value.id === button.dataset.id;});
+    if (item) openModal(item,'item');
   });
-  panel.querySelectorAll('.registry-filter').forEach(function (button) {
-    button.addEventListener('click', function () {currentFilter = button.dataset.filter;render();});
+  panel.querySelectorAll('.registry-filter').forEach(function(button) {
+    button.addEventListener('click',function(){activeFilter=button.dataset.filter;renderCards();});
   });
-  document.getElementById('registry-other-gift').addEventListener('click', function () {showModal(null, 'contribute');});
-  document.getElementById('registry-bank-transfer').addEventListener('click', function () {showModal(null, 'other');});
-  document.getElementById('registry-online-payment').addEventListener('click', function () {showModal(null, 'other');});
-  document.getElementById('registry-dialog-close').addEventListener('click', function () {dialog.close();});
-  dialog.addEventListener('click', function (event) {if (event.target === dialog) dialog.close();});
+  document.getElementById('registry-other-gift').addEventListener('click',function(){openModal(null,'gift');});
+  document.getElementById('registry-bank-transfer').addEventListener('click',function(){openModal(null,'bank');});
+  document.getElementById('registry-contact').addEventListener('click',function(){openModal(null,'contact');});
+  document.getElementById('registry-contact-footer').addEventListener('click',function(){openModal(null,'contact');});
+  document.getElementById('registry-dialog-close').addEventListener('click',function(){dialog.close();});
+  dialog.addEventListener('click',function(event){if(event.target === dialog) dialog.close();});
 
-  if (demo) {
-    const notice = document.createElement('div');
-    notice.className = 'registry-demo-alert';
-    notice.textContent = 'Registry preview — reservation changes are visible only in this browser. No payments are processed.';
-    document.getElementById('registry-grid').before(notice);
-  }
-  render();
-  if (apiBase && !demo) {
-    refreshFromServer();
-    setInterval(function () {if (!document.hidden) refreshFromServer();}, 30000);
-  }
+  renderCards();
+  if (apiBase) {refreshStatuses();setInterval(function(){if(!document.hidden) refreshStatuses();},30000);}
 })();
