@@ -161,6 +161,26 @@
       if(!Number.isFinite(value) || value<=0) {notify('Enter a valid amount.',true);amount.focus();return false;}
       return true;
     }
+    function allowPaymentNotice() {
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='registry-notice-link';
+      button.textContent='I have sent a transfer →';
+      button.addEventListener('click',function(){
+        if(!validate())return;
+        document.dispatchEvent(new CustomEvent('dc:gift-transfer-notice',{
+          detail:{
+            giftId:item?item.id:'custom-gift',
+            giftName:giftPurpose(),
+            amount:Number(amount.value),
+            currency:currency.value,
+            method:form.querySelector('input[name="payment-method"]:checked')?.value||'bank'
+          }
+        }));
+        dialog.close();
+      });
+      actions.appendChild(button);
+    }
     function installCopy(id,textFactory,confirmation) {
       const button=document.getElementById(id);
       if(!button)return;
@@ -182,6 +202,7 @@
           info.innerHTML='<dl class="registry-bank-details">'+rows.map(function(row){return '<div><dt>'+escapeHTML(row[0])+'</dt><dd>'+escapeHTML(row[1])+'</dd></div>';}).join('')+'</dl><p class="registry-dialog-note">Choose the relevant domestic or international instructions and verify the recipient with your bank. Transfers are not automatically confirmed.</p>';
           actions.innerHTML='<button class="primary" id="registry-copy-bank" type="button">Copy bank details</button>';
           installCopy('registry-copy-bank',function(){return rows.map(function(row){return row[0]+': '+row[1];}).join('\n')+'\nAmount: '+symbol[code]+Number(amount.value)+' '+code+'\nGift: '+giftPurpose();},'Bank details copied.');
+          allowPaymentNotice();
         } else {
           info.innerHTML='<p class="registry-dialog-note">No bank details are shown for '+code+'. For CNY, please choose Alipay transfer.</p>';
           actions.innerHTML='<button class="secondary" id="registry-bank-contact" type="button">Contact us</button>';
@@ -197,6 +218,7 @@
           info.innerHTML='<div class="registry-alipay-panel"><img class="registry-alipay-qr" src="./assets/dc-alipay-qr.svg" width="208" height="208" alt="Alipay payment QR code"><div class="registry-alipay-description"><strong>Scan with Alipay</strong><span>'+escapeHTML(account.recipientLabel||'Recipient provided by the couple')+'</span><span>Or add us on Alipay: <strong>'+escapeHTML(account.phone)+'</strong></span><a href="'+escapeHTML(account.qrUrl)+'" target="_blank" rel="noopener noreferrer">Open payment link ↗</a></div></div><p class="registry-dialog-note">Enter the selected amount and confirm the recipient shown by Alipay before sending. This personal QR is not a HubX Limited business bank account. Transfers are not automatically confirmed.</p>';
           actions.innerHTML='<button class="primary" id="registry-copy-alipay" type="button">Copy Alipay details</button>';
           installCopy('registry-copy-alipay',function(){return 'Alipay number: '+account.phone+'\nPayment link: '+account.qrUrl+'\nAmount: ¥'+Number(amount.value)+' CNY\nGift: '+giftPurpose();},'Alipay details copied.');
+          allowPaymentNotice();
         } else {
           info.innerHTML='<p class="registry-dialog-note">Alipay receiving details are not yet available. Please contact us before transferring.</p>';
           actions.innerHTML='<button class="secondary" id="registry-alipay-contact" type="button">Contact us</button>';
