@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS sponsor_requests (
   package_amount_ngn INTEGER NOT NULL CHECK(package_amount_ngn=10000000),
   preferred_currency TEXT NOT NULL CHECK(preferred_currency IN ('NGN','GBP','USD','EUR','CNY')),
   preferred_method TEXT NOT NULL CHECK(preferred_method IN ('bank','paypal','stripe','alipay')),
+  transfer_reference TEXT,
   logo_key TEXT,
   status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','rejected','paid')),
   created_at TEXT NOT NULL,
