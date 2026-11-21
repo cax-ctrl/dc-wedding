@@ -1,0 +1,21 @@
+name = "dc-wedding-rsvp"
+main = "src/index.js"
+compatibility_date = "2026-11-21"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://cax-ctrl.github.io"
+
+[[ratelimits]]
+name = "RSVP_RATE_LIMITER"
+namespace_id = "21001"
+  [ratelimits.simple]
+  limit = 4
+  period = 60
+
+[[ratelimits]]
+name = "RSVP_GLOBAL_LIMITER"
+namespace_id = "21002"
+  [ratelimits.simple]
+  limit = 80
+  period = 60
