@@ -1,3 +1,6 @@
-// Static GitHub Pages preview. Configure a separately hosted RSVP service later.
-// Never put private guest data, secrets or API keys in this public file.
-window.WEDDING_RSVP_API_BASE_URL = '';
+// Public RSVP configuration. Do not place guest details or service secrets here.
+// Add the HTTPS Cloudflare Worker origin only AFTER it and the private Google
+// Sheets bridge have been deployed and verified.
+window.WEDDING_RSVP_CONFIG = {
+  apiBase: ''
+};
