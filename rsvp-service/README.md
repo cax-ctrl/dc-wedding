@@ -7,7 +7,7 @@ This package supports the public wedding website without making Google Sheets ac
 - `/rsvp.js` — the public request form and validation. The form stays closed until `rsvp-config.js` contains a verified Worker URL.
 - `worker/src/index.js` — Cloudflare Worker endpoint `POST /api/rsvp/request`, with origin checking, input validation, honeypot and rate limits. It does not store guest data.
 - `apps-script/Code.gs` — Google Apps Script web app. It appends submissions to the **private** Google Sheet, deduplicates by phone and provides organiser-only menu actions for issuing admission codes and refreshing the door list.
-- Private native Google Sheet: https://docs.google.com/spreadsheets/d/1cZ2IelToxKsCgEpwf3ANswE44nAqq_0PmoXBNDfsMUM/edit
+- Private native Google Sheet: open it from your Google Drive. Do not publish its URL in this repository.
 
 ## Activate (owner action required)
 
