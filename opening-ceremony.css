@@ -1,7 +1,7 @@
 /* D&C ceremonial envelope opening. Keeps the invitation pages untouched. */
 .opening-stage{
   background:#879b8b;isolation:isolate;overflow:hidden;
-  opacity:1;transition:opacity 1.25s ease;
+  opacity:1;transition:opacity 1.05s ease;
 }
 .opening-stage::before,.opening-stage::after{display:none}
 .ceremony-base,.ceremony-side,.ceremony-lid-stage,
@@ -10,7 +10,7 @@
 }
 .ceremony-base{inset:0;background:radial-gradient(ellipse at 50% 37%,rgba(248,251,244,.16),transparent 55%),linear-gradient(148deg,#a8b3a4 0%,#889b8c 43%,#637a6e 100%)}
 .ceremony-base::after{content:"";position:absolute;inset:0;opacity:.18;background-image:repeating-linear-gradient(115deg,transparent 0 3px,rgba(255,255,255,.18) 4px,transparent 5px 11px);mix-blend-mode:soft-light}
-.ceremony-side{inset:-1px;backface-visibility:hidden;transition:transform 1.95s cubic-bezier(.18,.72,.18,1),opacity 1.55s ease;filter:drop-shadow(0 6px 8px rgba(33,49,39,.1))}
+.ceremony-side{inset:-1px;backface-visibility:hidden;transition:transform 1.3s cubic-bezier(.18,.72,.18,1),opacity .8s ease;filter:drop-shadow(0 6px 8px rgba(33,49,39,.1))}
 .ceremony-side::before{content:"";position:absolute;inset:0}
 .ceremony-left{clip-path:polygon(0 0,50% 50%,0 100%);z-index:2}
 .ceremony-left::before{background:linear-gradient(95deg,#95a999,#819687)}
@@ -20,12 +20,12 @@
 .ceremony-bottom::before{background:linear-gradient(0deg,#7b9080,#a3b09f 95%)}
 /* The seal belongs to the flap's FRONT face; the hinge is the only moving parent. */
 .ceremony-lid-stage{left:0;top:0;width:100%;height:50%;z-index:12;perspective:1400px;pointer-events:none}
-.ceremony-lid-hinge{width:100%;height:100%;position:relative;transform-origin:top center;transform-style:preserve-3d;transition:transform 2.75s cubic-bezier(.28,.06,.19,1);will-change:transform}
+.ceremony-lid-hinge{width:100%;height:100%;position:relative;transform-origin:top center;transform-style:preserve-3d;transition:transform 2.0s cubic-bezier(.28,.06,.19,1);will-change:transform}
 .ceremony-lid-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform-style:preserve-3d}
 .ceremony-lid-front{z-index:2}
 .ceremony-lid-back{transform:rotateX(180deg);z-index:1}
 .ceremony-lid-face>svg{position:absolute;inset:0;display:block;width:100%;height:100%;overflow:visible}
-.ceremony-lid-highlight{opacity:0;filter:drop-shadow(0 0 10px rgba(255,221,159,.8));transition:opacity 1.4s ease}
+.ceremony-lid-highlight{opacity:0;filter:drop-shadow(0 0 10px rgba(255,221,159,.8));transition:opacity 1.0s ease}
 .ceremony-seal{
   position:absolute;top:100%;left:50%;z-index:2;
   transform:translate(-50%,-50%);
@@ -40,16 +40,16 @@
 .ceremony-seal:active{filter:brightness(.96) drop-shadow(0 6px 7px rgba(49,62,44,.35))}
 @keyframes ceremony-seal-breathe{0%,100%{filter:drop-shadow(0 10px 10px rgba(49,62,44,.24))}50%{filter:drop-shadow(0 13px 13px rgba(49,62,44,.36))}}
 .ceremony-lines,.ceremony-florals{inset:0;width:100%;height:100%;pointer-events:none}
-.ceremony-lines{z-index:6;opacity:.8;transition:opacity 1s ease}
+.ceremony-lines{z-index:6;opacity:.8;transition:opacity .7s ease}
 .ceremony-lines .seam-dark{stroke:#62786b;stroke-width:2.5;fill:none;opacity:.5}
 .ceremony-lines .seam-light{stroke:#d2dacb;stroke-width:2;fill:none;opacity:.56}
-.ceremony-lines .seam-gold{stroke:#e6c894;stroke-width:6;fill:none;opacity:0;filter:drop-shadow(0 0 13px #ffdfa6);transition:opacity .8s ease}
-.ceremony-florals{z-index:7;opacity:.38;transition:opacity 1.9s ease,filter 1.6s ease}
+.ceremony-lines .seam-gold{stroke:#e6c894;stroke-width:6;fill:none;opacity:0;filter:drop-shadow(0 0 13px #ffdfa6);transition:opacity .6s ease}
+.ceremony-florals{z-index:7;opacity:.38;transition:opacity 1.15s ease,filter 1s ease}
 .ceremony-florals g{stroke:#d8dfce;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ceremony-florals .shadow-strokes{stroke:#4d6355;stroke-width:4;opacity:.4;transform:translate(0px,3px)}
-.ceremony-florals .floral-gold{stroke:#f7d6a2;stroke-width:2.7;opacity:0;filter:drop-shadow(0 0 12px #f5c882);transition:opacity 1.85s ease}
-.ceremony-light{z-index:8;inset:-40%;opacity:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(255,250,226,.98) 0%,rgba(255,227,166,.79) 7%,rgba(237,190,114,.32) 22%,rgba(237,190,114,0) 48%);filter:blur(9px);transform:scale(.2);transition:transform 2.7s cubic-bezier(.1,.6,.2,1),opacity 1.85s ease;mix-blend-mode:screen}
-.ceremony-core{z-index:8;left:50%;top:50%;height:15vw;width:15vw;max-height:210px;max-width:210px;min-height:110px;min-width:110px;transform:translate(-50%,-50%) scale(.12);pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(255,250,223,.96),rgba(255,219,154,.65) 34%,rgba(255,219,154,0) 73%);filter:blur(17px);opacity:0;transition:opacity 1.6s ease,transform 2.45s ease}
+.ceremony-florals .floral-gold{stroke:#f7d6a2;stroke-width:2.7;opacity:0;filter:drop-shadow(0 0 12px #f5c882);transition:opacity 1.1s ease}
+.ceremony-light{z-index:8;inset:-40%;opacity:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(255,250,226,.98) 0%,rgba(255,227,166,.79) 7%,rgba(237,190,114,.32) 22%,rgba(237,190,114,0) 48%);filter:blur(9px);transform:scale(.2);transition:transform 1.85s cubic-bezier(.1,.6,.2,1),opacity 1.1s ease;mix-blend-mode:screen}
+.ceremony-core{z-index:8;left:50%;top:50%;height:15vw;width:15vw;max-height:210px;max-width:210px;min-height:110px;min-width:110px;transform:translate(-50%,-50%) scale(.12);pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(255,250,223,.96),rgba(255,219,154,.65) 34%,rgba(255,219,154,0) 73%);filter:blur(17px);opacity:0;transition:opacity 1.05s ease,transform 1.8s ease}
 .ceremony-hint{position:absolute;z-index:13;bottom:calc(47px + env(safe-area-inset-bottom));left:12px;right:12px;margin:0;text-align:center;color:#f6f2e9;font:italic 500 clamp(1.14rem,2vw,1.38rem) var(--serif);letter-spacing:.025em;text-shadow:0 1px 5px rgba(51,70,56,.25);pointer-events:none;transition:opacity .25s ease}
 .opening-stage.is-lifting .ceremony-hint{opacity:0}
 .opening-stage.is-lifting .ceremony-seal{animation:none}

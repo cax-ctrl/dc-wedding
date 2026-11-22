@@ -1,6 +1,6 @@
 'use strict';
 
-// A single tap begins the 6.5-second ceremonial opening; the seal belongs
+// A single tap begins the 4.5-second ceremonial opening; the seal belongs
 // to the hinged upper lid and never moves separately from its parent.
 (function setupEnvelope(){
   const stage=document.getElementById('opening-stage');
@@ -27,11 +27,11 @@
     seal.disabled=true;
     if(reducedMotion.matches){finish();return;}
     stage.classList.add('is-lifting');
-    window.setTimeout(()=>stage.classList.add('is-blooming'),400);
-    window.setTimeout(()=>stage.classList.add('is-opening'),1650);
-    window.setTimeout(()=>stage.classList.add('is-clearing'),4600);
-    window.setTimeout(()=>stage.classList.add('is-revealing'),5200);
-    window.setTimeout(finish,6500);
+    window.setTimeout(()=>stage.classList.add('is-blooming'),300);
+    window.setTimeout(()=>stage.classList.add('is-opening'),1000);
+    window.setTimeout(()=>stage.classList.add('is-clearing'),3050);
+    window.setTimeout(()=>stage.classList.add('is-revealing'),3400);
+    window.setTimeout(finish,4500);
   });
 })();
 
