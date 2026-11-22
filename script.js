@@ -1,39 +1,39 @@
 'use strict';
 
-// Wedding invitation opening animation. RSVP requests are handled separately in rsvp.js.
-// A genuine physical opening sequence: seal lifts, flaps part, homepage appears.
+// A single tap begins the 6.5-second ceremonial opening; the seal belongs
+// to the hinged upper lid and never moves separately from its parent.
 (function setupEnvelope(){
   const stage=document.getElementById('opening-stage');
   const pages=document.getElementById('pages');
-  const open=document.getElementById('open-seal');
+  const seal=document.getElementById('open-seal');
   const skipLink=document.querySelector('.skip-link');
-  if(!stage || !pages || !open) return;
-  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!stage || !pages || !seal) return;
+  const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
   pages.inert=true;
   if(skipLink) skipLink.inert=true;
-  let running=false, finished=false;
+  let started=false;
   function finish(){
-    if(finished) return;
-    finished=true;
+    if(stage.hidden)return;
     pages.inert=false;
     if(skipLink) skipLink.inert=false;
     stage.hidden=true;
-    const pageControls=document.getElementById('page-jump-controls');
-    if(pageControls) pageControls.hidden=false;
-    document.getElementById('home').scrollIntoView({block:'start',behavior:'instant'});
+    const controls=document.getElementById('page-jump-controls');
+    if(controls) controls.hidden=false;
+    pages.scrollTo({top:0,behavior:'instant'});
   }
-  open.addEventListener('click',()=>{
-    if(running||finished)return;
-    running=true;
-    if(reduceMotion){finish();return;}
-    stage.classList.add('is-unsealing');
-    window.setTimeout(()=>stage.classList.add('is-lifting'),430);
-    window.setTimeout(()=>stage.classList.add('is-parting'),1100);
-    window.setTimeout(()=>stage.classList.add('is-revealing'),2000);
-    window.setTimeout(finish,2660);
+  seal.addEventListener('click',()=>{
+    if(started)return;
+    started=true;
+    seal.disabled=true;
+    if(reducedMotion.matches){finish();return;}
+    stage.classList.add('is-lifting');
+    window.setTimeout(()=>stage.classList.add('is-blooming'),400);
+    window.setTimeout(()=>stage.classList.add('is-opening'),1650);
+    window.setTimeout(()=>stage.classList.add('is-clearing'),4600);
+    window.setTimeout(()=>stage.classList.add('is-revealing'),5200);
+    window.setTimeout(finish,6500);
   });
 })();
-
 
 // Discreet page-by-page controls. A click skips an internally scrolling section
 // such as the gift registry, without making guests scroll through every gift.

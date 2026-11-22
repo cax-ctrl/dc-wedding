@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="./giving.css">
   <link rel="stylesheet" href="./story.css">
   <link rel="stylesheet" href="./audio.css">
+  <link rel="stylesheet" href="./opening-ceremony.css">
   <script defer src="./rsvp-config.js"></script>
   <script defer src="./rsvp.js"></script>
   <script defer src="./script.js"></script>
@@ -31,66 +32,54 @@
 <body>
 <a href="#invitation" class="skip-link">Skip invitation cover</a>
 
-  <!-- Full-viewport envelope: the wax seal is the only invitation-opening action. -->
+  <!-- The ivory D&C seal is physically attached to the upper 3D flap. -->
   <div class="opening-stage" id="opening-stage" role="dialog" aria-modal="true" aria-label="Sealed wedding invitation">
-    <div class="opening-envelope" aria-hidden="true">
-      <div class="opening-flap flap-left"></div>
-      <div class="opening-flap flap-right"></div>
-      <div class="opening-flap flap-bottom"></div>
-      <div class="opening-flap flap-top"></div>
-
-      <svg class="opening-seams" viewBox="0 0 1000 1600" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M 0 0 L 500 800 L 1000 0 M 0 1600 L 500 800 L 1000 1600" />
-        <path d="M 0 0 L 500 800 L 0 1600 M 1000 0 L 500 800 L 1000 1600" class="seams-highlight" />
-      </svg>
-      <svg class="opening-emboss" viewBox="0 0 1000 1600" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <g id="flower" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M0 -29 C-14 -43 -27 -19 -13 -7 C-36 -16 -41 9 -16 11 C-31 30 -6 38 4 17 C16 38 39 21 19 6 C42 -4 29 -29 9 -14 C13 -38 -4 -43 0 -29Z"/>
-            <circle cx="1" cy="1" r="8"/>
-            <path d="M-3 -3l7 8M4 -5l-6 10"/>
-          </g>
-          <g id="branch" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M0 0 C-35 -14 -90 -50 -172 -45"/>
-            <path d="M-34 -12 C-52 -42 -69 -53 -81 -49 C-73 -25 -56 -13 -34 -12Z"/>
-            <path d="M-66 -28 C-75 -3 -102 -1 -110 -14 C-97 -35 -80 -39 -66 -28Z"/>
-            <path d="M-115 -41 C-135 -66 -151 -64 -156 -60 C-144 -41 -130 -34 -115 -41Z"/>
-            <path d="M-145 -45 C-155 -24 -176 -15 -192 -21 C-178 -41 -162 -49 -145 -45Z"/>
-          </g>
-        </defs>
-        <g class="emboss-shadow" stroke="#d5bfa9" stroke-width="4.5" opacity=".55">
-          <g transform="translate(500 215)">
-            <use href="#branch"/>
-            <use href="#branch" transform="scale(-1 1)"/>
-            <use href="#branch" transform="rotate(-15) scale(1.25 1.2)"/>
-            <use href="#branch" transform="rotate(15) scale(-1.25 1.2)"/>
-            <use href="#flower" transform="translate(0 -10) scale(1.65)"/>
-            <use href="#flower" transform="translate(-135 -17) scale(.9)"/>
-            <use href="#flower" transform="translate(135 -17) scale(.9)"/>
-            <use href="#flower" transform="translate(-220 -35) scale(.6)"/>
-            <use href="#flower" transform="translate(220 -35) scale(.6)"/>
-          </g>
-          <g transform="translate(500 1403) scale(1 -1)">
-            <use href="#branch"/>
-            <use href="#branch" transform="scale(-1 1)"/>
-            <use href="#branch" transform="rotate(-15) scale(1.25 1.2)"/>
-            <use href="#branch" transform="rotate(15) scale(-1.25 1.2)"/>
-            <use href="#flower" transform="translate(0 -10) scale(1.65)"/>
-            <use href="#flower" transform="translate(-135 -17) scale(.9)"/>
-            <use href="#flower" transform="translate(135 -17) scale(.9)"/>
-            <use href="#flower" transform="translate(-220 -35) scale(.6)"/>
-            <use href="#flower" transform="translate(220 -35) scale(.6)"/>
-          </g>
-        </g>
-      </svg>
-      <div class="opening-glow"></div>
-      <button class="envelope-seal" type="button" id="open-seal" aria-label="Open Deborah and Caleb's wedding invitation">
-        <img class="wax-stamp-image" src="./assets/dc-ivory-wax-seal.svg" alt="" width="160" height="160" decoding="async">
-      </button>
+    <div class="ceremony-base" aria-hidden="true"></div>
+    <div class="ceremony-side ceremony-left" aria-hidden="true"></div>
+    <div class="ceremony-side ceremony-right" aria-hidden="true"></div>
+    <div class="ceremony-side ceremony-bottom" aria-hidden="true"></div>
+    <div class="ceremony-lid-stage">
+      <div class="ceremony-lid-hinge">
+        <div class="ceremony-lid-face ceremony-lid-front">
+          <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="ceremony-lid-outer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aebbaa"/><stop offset=".62" stop-color="#93a595"/><stop offset="1" stop-color="#728778"/></linearGradient></defs>
+            <polygon points="0,0 1000,0 500,1000" fill="url(#ceremony-lid-outer)"/>
+            <path d="M0 0 L500 1000 L1000 0" fill="none" stroke="#5f786b" stroke-width="5" opacity=".55"/>
+            <path class="ceremony-lid-highlight" d="M0 0 L500 1000 L1000 0" fill="none" stroke="#f5daaa" stroke-width="7"/>
+            <path d="M0 0 L500 1000 L1000 0" fill="none" stroke="#d9e0d4" stroke-width="2" opacity=".7"/>
+          </svg>
+          <button class="ceremony-seal" type="button" id="open-seal" aria-label="Open Deborah and Caleb's wedding invitation">
+            <img src="./assets/dc-ivory-wax-seal.svg" alt="" width="160" height="160" decoding="async">
+          </button>
+        </div>
+        <div class="ceremony-lid-face ceremony-lid-back" aria-hidden="true">
+          <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+            <defs><linearGradient id="ceremony-lid-inner" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8d9bc"/><stop offset=".5" stop-color="#d4c09b"/><stop offset="1" stop-color="#b4a182"/></linearGradient></defs>
+            <polygon points="0,0 1000,0 500,1000" fill="url(#ceremony-lid-inner)"/>
+            <path d="M0 0 L500 1000 L1000 0" fill="none" stroke="#f8e4b8" stroke-width="3" opacity=".7"/>
+          </svg>
+        </div>
+      </div>
     </div>
-    <p class="envelope-hint">Tap the seal to open</p>
+    <svg class="ceremony-lines" viewBox="0 0 1000 1600" preserveAspectRatio="none" aria-hidden="true">
+      <path class="seam-dark" d="M0 1600 L500 800 L1000 1600"/>
+      <path class="seam-light" d="M0 0 L500 800 L0 1600 M1000 0 L500 800 L1000 1600"/>
+      <path class="seam-gold" d="M0 1600 L500 800 L1000 1600"/>
+    </svg>
+    <svg class="ceremony-florals" viewBox="0 0 1000 1600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <g id="ceremony-leaf-stem"><path d="M0 0 Q-50 -100 -115 -192 Q-146 -240 -212 -264"/><path d="M-48 -80 Q-83 -118 -117 -100 Q-88 -65 -48 -80Z"/><path d="M-93 -149 Q-112 -196 -154 -202 Q-151 -162 -93 -149Z"/><path d="M-154 -229 Q-187 -221 -202 -194 Q-161 -188 -154 -229Z"/><path d="M-40 -60 Q0 -107 -4 -143 Q-38 -126 -40 -60Z"/><path d="M-127 -173 Q-74 -174 -57 -211 Q-92 -224 -127 -173Z"/></g>
+        <g id="ceremony-rose"><path d="M0 -42 C-28 -63 -65 -39 -57 -11 C-86 -3 -78 40 -41 38 C-38 74 11 82 24 49 C59 65 81 27 57 4 C76 -27 46 -57 20 -42 C8 -69 -19 -65 0 -42Z"/><path d="M-29 -25 Q-1 -54 25 -20 Q45 6 22 28 Q-7 46 -20 17 Q-23 -5 -2 -16 Q20 -21 23 3 Q19 15 7 12 Q-5 7 3 1"/><path d="M-57 16 Q-35 -4 -25 -10M30 51 Q34 23 52 13"/></g>
+        <g id="ceremony-corner"><use href="#ceremony-leaf-stem"/><use href="#ceremony-leaf-stem" transform="rotate(27) scale(.75)"/><use href="#ceremony-rose" transform="translate(-79 -115) scale(.72)"/><use href="#ceremony-rose" transform="translate(-169 -255) scale(.9)"/><use href="#ceremony-rose" transform="translate(-14 -19) scale(.52)"/></g>
+      </defs>
+      <g class="shadow-strokes"><use href="#ceremony-corner" transform="translate(225 560) rotate(-35) scale(.9)"/><use href="#ceremony-corner" transform="translate(775 560) rotate(35) scale(-.9 .9)"/><use href="#ceremony-corner" transform="translate(210 1240) rotate(15) scale(.8 -1)"/><use href="#ceremony-corner" transform="translate(790 1240) rotate(-15) scale(-.8 -1)"/></g>
+      <g><use href="#ceremony-corner" transform="translate(225 560) rotate(-35) scale(.9)"/><use href="#ceremony-corner" transform="translate(775 560) rotate(35) scale(-.9 .9)"/><use href="#ceremony-corner" transform="translate(210 1240) rotate(15) scale(.8 -1)"/><use href="#ceremony-corner" transform="translate(790 1240) rotate(-15) scale(-.8 -1)"/></g>
+      <g class="floral-gold"><use href="#ceremony-corner" transform="translate(225 560) rotate(-35) scale(.9)"/><use href="#ceremony-corner" transform="translate(775 560) rotate(35) scale(-.9 .9)"/><use href="#ceremony-corner" transform="translate(210 1240) rotate(15) scale(.8 -1)"/><use href="#ceremony-corner" transform="translate(790 1240) rotate(-15) scale(-.8 -1)"/></g>
+    </svg>
+    <div class="ceremony-light" aria-hidden="true"></div>
+    <div class="ceremony-core" aria-hidden="true"></div>
+    <p class="ceremony-hint">Tap the seal to open</p>
   </div>
-
 <main class="pages" id="pages">
   <section class="page cover page-photo" id="home" aria-labelledby="cover-heading">
     <div class="page-photo-image" style="--photo:url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;w=1800&amp;q=82')"></div>
